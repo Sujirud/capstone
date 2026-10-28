@@ -1,0 +1,74 @@
+# ILLUSTRATIVE RULES ONLY — NOT CLINICALLY VALIDATED.
+#
+# This file shows the rule format for the Phase 3 recommendation engine.
+# Real rules are authored and signed off by the clinical team. A file marked
+# `example_not_clinically_validated: true` needs no `approved_by`, and clients label
+# its topics as illustrative.
+#
+# Rule fields:
+#   id, version, approved_by        traceability (approved_by must name a surgeon for real rules)
+#   conditions                      {all: [...]} or {any: [...]}; each item: {metric, op, value}
+#                                   op ∈ {status_is, lt, le, gt, ge}; `value` for status_is is a status
+#   exclusions                      conditions that suppress the rule when they match
+#   min_quality                     "passed" (capture passed every gate and the distance was verified)
+#   min_confidence                  "high" → metrics with low confidence never trigger the rule
+#   severity                        info | discuss
+#   area                            face area used to group findings in the app
+#   finding_key                     locale key describing the observation (neutral wording)
+#   consideration_keys              one finding can have several possible causes → several keys
+#   references                      literature supporting the rule
+example_not_clinically_validated: true
+rules_version: "EXAMPLE"
+
+rules:
+  - id: EXAMPLE-01
+    version: 1
+    approved_by: null
+    conditions:
+      all:
+        - {metric: P2_nasolabial_angle, op: status_is, value: below}
+    exclusions: []
+    min_quality: passed
+    min_confidence: high
+    severity: info
+    area: nose
+    finding_key: finding.example_nasolabial_below
+    consideration_keys:
+      - consideration.example_nasal_tip
+    references: []
+
+  - id: EXAMPLE-02
+    version: 1
+    approved_by: null
+    conditions:
+      any:
+        - {metric: P4_eline_upper_lip_mm, op: status_is, value: above}
+        - {metric: P4_eline_lower_lip_mm, op: status_is, value: above}
+    exclusions: []
+    min_quality: passed
+    min_confidence: high
+    severity: info
+    area: profile
+    finding_key: finding.example_lips_ahead_of_eline
+    # One finding, several possible causes: never map one metric to one procedure.
+    consideration_keys:
+      - consideration.example_nasal_projection
+      - consideration.example_chin_projection
+      - consideration.example_dental_assessment
+    references: []
+
+  - id: EXAMPLE-03
+    version: 1
+    approved_by: null
+    conditions:
+      all:
+        - {metric: F6_alar_icd_ratio, op: status_is, value: above}
+    exclusions: []
+    min_quality: passed
+    min_confidence: high
+    severity: info
+    area: nose
+    finding_key: finding.example_alar_width_above
+    consideration_keys:
+      - consideration.example_alar_base
+    references: []

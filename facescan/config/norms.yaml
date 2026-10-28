@@ -1,0 +1,200 @@
+# Reference profiles.
+#
+# `canon`: the classical proportion canon. Single-value targets
+# use a tolerance band of ±`tolerance_frac` (placeholder until clinically
+# confirmed). Alignment offsets with a target of 0 (`zero_band`) use a band of
+# ±`zero_band_frac_icd` × ICD (placeholder), expressed in the metric's unit.
+#
+# `th_east_asian`: population norms per sex. EVERY VALUE IS null UNTIL THE CLINICAL
+# TEAM FILLS IT IN AND SIGNS IT OFF. Do not copy numbers from memory or the web.
+# Literature to review:
+#   - Le TT, Farkas LG, et al. Aesthetic Plast Surg 2002;26:64–69
+#     (Chinese, Vietnamese and Thai young adults).
+#   - Farkas LG, et al. J Craniofac Surg 2005;16:615–646
+#     (sex-specific measurements, same Asian samples).
+version: "1"
+
+profiles:
+  canon:
+    kind: canon
+    description: Classical proportion canon
+    source: "classical canon and textbook reference ranges"
+    tolerance_frac: 0.05          # placeholder
+    zero_band_frac_icd: 0.05      # placeholder
+    metrics:
+      F1_upper_third:                     {type: target, target: "1/3"}
+      F1_middle_third:                    {type: target, target: "1/3"}
+      F1_lower_third:                     {type: target, target: "1/3"}
+      F1_middle_lower_ratio:              {type: target, target: 1.0}
+      F2_lower_face_ratio:                {type: target, target: 0.5}          # subnasale→stomion : stomion→menton = 1 : 2
+      F3_fifth_outer_right:               {type: target, target: 0.2}
+      F3_fifth_eye_right:                 {type: target, target: 0.2}
+      F3_fifth_intercanthal:              {type: target, target: 0.2}
+      F3_fifth_eye_left:                  {type: target, target: 0.2}
+      F3_fifth_outer_left:                {type: target, target: 0.2}
+      F4_eye_icd_ratio_right:             {type: target, target: 1.0}
+      F4_eye_icd_ratio_left:              {type: target, target: 1.0}
+      F4_icd_mm:                          {type: range, min: 30.0, max: 34.0}
+      F5_canthal_tilt_right:              {type: range, min: 2.0, max: 8.0}
+      F5_canthal_tilt_left:               {type: range, min: 2.0, max: 8.0}
+      F6_alar_icd_ratio:                  {type: target, target: 1.0}
+      F7_commissure_offset_right_pct_icd: {type: zero_band}
+      F7_commissure_offset_left_pct_icd:  {type: zero_band}
+      F7_commissure_offset_right_mm:      {type: zero_band}
+      F7_commissure_offset_left_mm:       {type: zero_band}
+      F7_mouth_alar_ratio:                {type: target, target: 1.5}
+      F7_mouth_ipd_ratio:                 {type: target, target: 1.0}
+      F8_lip_ratio:                       {type: target, target: 1.618}               # lower : upper vermilion = 1.618 : 1
+      F9_brow_head_offset_right_pct_icd:  {type: zero_band}
+      F9_brow_head_offset_right_mm:       {type: zero_band}
+      F9_brow_apex_offset_right_pct_icd:  {type: zero_band}
+      F9_brow_apex_offset_right_mm:       {type: zero_band}
+      F9_brow_apex_ratio_right:           {type: target, target: 2.0}
+      F9_brow_tail_offset_right_pct_icd:  {type: zero_band}
+      F9_brow_tail_offset_right_mm:       {type: zero_band}
+      F9_brow_head_offset_left_pct_icd:   {type: zero_band}
+      F9_brow_head_offset_left_mm:        {type: zero_band}
+      F9_brow_apex_offset_left_pct_icd:   {type: zero_band}
+      F9_brow_apex_offset_left_mm:        {type: zero_band}
+      F9_brow_apex_ratio_left:            {type: target, target: 2.0}
+      F9_brow_tail_offset_left_pct_icd:   {type: zero_band}
+      F9_brow_tail_offset_left_mm:        {type: zero_band}
+      F10_golden_ratio:                   {type: target, target: 1.618}
+      F11_asym_eye_width:                 null                                  # reported only
+      F11_asym_outer_fifth:               null                                  # reported only
+      F11_asym_canthal_tilt:              null                                  # reported only
+      F11_asym_commissure_offset:         null                                  # reported only
+      F11_asym_brow_head_offset:          null                                  # reported only
+      F11_asym_brow_apex_offset:          null                                  # reported only
+      F11_asym_brow_apex_ratio:           null                                  # reported only
+      F11_asym_brow_tail_offset:          null                                  # reported only
+      P1_nasofrontal_angle:               {type: range, min: 115.0, max: 130.0}
+      P2_nasolabial_angle:                {type: range, min: 95.0, max: 105.0}
+      P3a_tip_projection_goode:           {type: range, min: 0.55, max: 0.60}
+      P3b_tip_projection_simons:          {type: target, target: 1.0}
+      P4_eline_upper_lip_mm:              {type: range, min: -4.0, max: -2.0}
+      P4_eline_lower_lip_mm:              {type: range, min: -2.0, max: -1.0}
+      P4_eline_upper_lip_pct:             null                                  # no canon without a profile scale
+      P4_eline_lower_lip_pct:             null                                  # no canon without a profile scale
+      P5_forehead_inclination:            {type: range, min: 12.0, max: 15.0}
+
+  th_east_asian:
+    kind: population
+    description: Thai / East Asian population norms (sex-specific)
+    source: TODO                  # clinical team: cite the table each value comes from
+    approved_by: null             # TODO clinical sign-off
+    # Width of the typical range shown to users, in SD units (mean ± k·SD).
+    typical_range_sd: null        # TODO clinical decision
+    sexes:
+      female:
+        F1_upper_third:                     {mean: null, sd: null, source: TODO}
+        F1_middle_third:                    {mean: null, sd: null, source: TODO}
+        F1_lower_third:                     {mean: null, sd: null, source: TODO}
+        F1_middle_lower_ratio:              {mean: null, sd: null, source: TODO}
+        F2_lower_face_ratio:                {mean: null, sd: null, source: TODO}
+        F3_fifth_outer_right:               {mean: null, sd: null, source: TODO}
+        F3_fifth_eye_right:                 {mean: null, sd: null, source: TODO}
+        F3_fifth_intercanthal:              {mean: null, sd: null, source: TODO}
+        F3_fifth_eye_left:                  {mean: null, sd: null, source: TODO}
+        F3_fifth_outer_left:                {mean: null, sd: null, source: TODO}
+        F4_eye_icd_ratio_right:             {mean: null, sd: null, source: TODO}
+        F4_eye_icd_ratio_left:              {mean: null, sd: null, source: TODO}
+        F4_icd_mm:                          {mean: null, sd: null, source: TODO}
+        F5_canthal_tilt_right:              {mean: null, sd: null, source: TODO}
+        F5_canthal_tilt_left:               {mean: null, sd: null, source: TODO}
+        F6_alar_icd_ratio:                  {mean: null, sd: null, source: TODO}
+        F7_commissure_offset_right_pct_icd: {mean: null, sd: null, source: TODO}
+        F7_commissure_offset_left_pct_icd:  {mean: null, sd: null, source: TODO}
+        F7_commissure_offset_right_mm:      {mean: null, sd: null, source: TODO}
+        F7_commissure_offset_left_mm:       {mean: null, sd: null, source: TODO}
+        F7_mouth_alar_ratio:                {mean: null, sd: null, source: TODO}
+        F7_mouth_ipd_ratio:                 {mean: null, sd: null, source: TODO}
+        F8_lip_ratio:                       {mean: null, sd: null, source: TODO}
+        F9_brow_head_offset_right_pct_icd:  {mean: null, sd: null, source: TODO}
+        F9_brow_head_offset_right_mm:       {mean: null, sd: null, source: TODO}
+        F9_brow_apex_offset_right_pct_icd:  {mean: null, sd: null, source: TODO}
+        F9_brow_apex_offset_right_mm:       {mean: null, sd: null, source: TODO}
+        F9_brow_apex_ratio_right:           {mean: null, sd: null, source: TODO}
+        F9_brow_tail_offset_right_pct_icd:  {mean: null, sd: null, source: TODO}
+        F9_brow_tail_offset_right_mm:       {mean: null, sd: null, source: TODO}
+        F9_brow_head_offset_left_pct_icd:   {mean: null, sd: null, source: TODO}
+        F9_brow_head_offset_left_mm:        {mean: null, sd: null, source: TODO}
+        F9_brow_apex_offset_left_pct_icd:   {mean: null, sd: null, source: TODO}
+        F9_brow_apex_offset_left_mm:        {mean: null, sd: null, source: TODO}
+        F9_brow_apex_ratio_left:            {mean: null, sd: null, source: TODO}
+        F9_brow_tail_offset_left_pct_icd:   {mean: null, sd: null, source: TODO}
+        F9_brow_tail_offset_left_mm:        {mean: null, sd: null, source: TODO}
+        F10_golden_ratio:                   {mean: null, sd: null, source: TODO}
+        F11_asym_eye_width:                 {mean: null, sd: null, source: TODO}
+        F11_asym_outer_fifth:               {mean: null, sd: null, source: TODO}
+        F11_asym_canthal_tilt:              {mean: null, sd: null, source: TODO}
+        F11_asym_commissure_offset:         {mean: null, sd: null, source: TODO}
+        F11_asym_brow_head_offset:          {mean: null, sd: null, source: TODO}
+        F11_asym_brow_apex_offset:          {mean: null, sd: null, source: TODO}
+        F11_asym_brow_apex_ratio:           {mean: null, sd: null, source: TODO}
+        F11_asym_brow_tail_offset:          {mean: null, sd: null, source: TODO}
+        P1_nasofrontal_angle:               {mean: null, sd: null, source: TODO}
+        P2_nasolabial_angle:                {mean: null, sd: null, source: TODO}
+        P3a_tip_projection_goode:           {mean: null, sd: null, source: TODO}
+        P3b_tip_projection_simons:          {mean: null, sd: null, source: TODO}
+        P4_eline_upper_lip_mm:              {mean: null, sd: null, source: TODO}
+        P4_eline_lower_lip_mm:              {mean: null, sd: null, source: TODO}
+        P4_eline_upper_lip_pct:             {mean: null, sd: null, source: TODO}
+        P4_eline_lower_lip_pct:             {mean: null, sd: null, source: TODO}
+        P5_forehead_inclination:            {mean: null, sd: null, source: TODO}
+      male:
+        F1_upper_third:                     {mean: null, sd: null, source: TODO}
+        F1_middle_third:                    {mean: null, sd: null, source: TODO}
+        F1_lower_third:                     {mean: null, sd: null, source: TODO}
+        F1_middle_lower_ratio:              {mean: null, sd: null, source: TODO}
+        F2_lower_face_ratio:                {mean: null, sd: null, source: TODO}
+        F3_fifth_outer_right:               {mean: null, sd: null, source: TODO}
+        F3_fifth_eye_right:                 {mean: null, sd: null, source: TODO}
+        F3_fifth_intercanthal:              {mean: null, sd: null, source: TODO}
+        F3_fifth_eye_left:                  {mean: null, sd: null, source: TODO}
+        F3_fifth_outer_left:                {mean: null, sd: null, source: TODO}
+        F4_eye_icd_ratio_right:             {mean: null, sd: null, source: TODO}
+        F4_eye_icd_ratio_left:              {mean: null, sd: null, source: TODO}
+        F4_icd_mm:                          {mean: null, sd: null, source: TODO}
+        F5_canthal_tilt_right:              {mean: null, sd: null, source: TODO}
+        F5_canthal_tilt_left:               {mean: null, sd: null, source: TODO}
+        F6_alar_icd_ratio:                  {mean: null, sd: null, source: TODO}
+        F7_commissure_offset_right_pct_icd: {mean: null, sd: null, source: TODO}
+        F7_commissure_offset_left_pct_icd:  {mean: null, sd: null, source: TODO}
+        F7_commissure_offset_right_mm:      {mean: null, sd: null, source: TODO}
+        F7_commissure_offset_left_mm:       {mean: null, sd: null, source: TODO}
+        F7_mouth_alar_ratio:                {mean: null, sd: null, source: TODO}
+        F7_mouth_ipd_ratio:                 {mean: null, sd: null, source: TODO}
+        F8_lip_ratio:                       {mean: null, sd: null, source: TODO}
+        F9_brow_head_offset_right_pct_icd:  {mean: null, sd: null, source: TODO}
+        F9_brow_head_offset_right_mm:       {mean: null, sd: null, source: TODO}
+        F9_brow_apex_offset_right_pct_icd:  {mean: null, sd: null, source: TODO}
+        F9_brow_apex_offset_right_mm:       {mean: null, sd: null, source: TODO}
+        F9_brow_apex_ratio_right:           {mean: null, sd: null, source: TODO}
+        F9_brow_tail_offset_right_pct_icd:  {mean: null, sd: null, source: TODO}
+        F9_brow_tail_offset_right_mm:       {mean: null, sd: null, source: TODO}
+        F9_brow_head_offset_left_pct_icd:   {mean: null, sd: null, source: TODO}
+        F9_brow_head_offset_left_mm:        {mean: null, sd: null, source: TODO}
+        F9_brow_apex_offset_left_pct_icd:   {mean: null, sd: null, source: TODO}
+        F9_brow_apex_offset_left_mm:        {mean: null, sd: null, source: TODO}
+        F9_brow_apex_ratio_left:            {mean: null, sd: null, source: TODO}
+        F9_brow_tail_offset_left_pct_icd:   {mean: null, sd: null, source: TODO}
+        F9_brow_tail_offset_left_mm:        {mean: null, sd: null, source: TODO}
+        F10_golden_ratio:                   {mean: null, sd: null, source: TODO}
+        F11_asym_eye_width:                 {mean: null, sd: null, source: TODO}
+        F11_asym_outer_fifth:               {mean: null, sd: null, source: TODO}
+        F11_asym_canthal_tilt:              {mean: null, sd: null, source: TODO}
+        F11_asym_commissure_offset:         {mean: null, sd: null, source: TODO}
+        F11_asym_brow_head_offset:          {mean: null, sd: null, source: TODO}
+        F11_asym_brow_apex_offset:          {mean: null, sd: null, source: TODO}
+        F11_asym_brow_apex_ratio:           {mean: null, sd: null, source: TODO}
+        F11_asym_brow_tail_offset:          {mean: null, sd: null, source: TODO}
+        P1_nasofrontal_angle:               {mean: null, sd: null, source: TODO}
+        P2_nasolabial_angle:                {mean: null, sd: null, source: TODO}
+        P3a_tip_projection_goode:           {mean: null, sd: null, source: TODO}
+        P3b_tip_projection_simons:          {mean: null, sd: null, source: TODO}
+        P4_eline_upper_lip_mm:              {mean: null, sd: null, source: TODO}
+        P4_eline_lower_lip_mm:              {mean: null, sd: null, source: TODO}
+        P4_eline_upper_lip_pct:             {mean: null, sd: null, source: TODO}
+        P4_eline_lower_lip_pct:             {mean: null, sd: null, source: TODO}
+        P5_forehead_inclination:            {mean: null, sd: null, source: TODO}

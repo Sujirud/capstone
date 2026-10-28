@@ -1,0 +1,21 @@
+{
+  "analysis_timeout": 504,
+  "frame_size_mismatch": 422,
+  "image_mismatch": 422,
+  "internal_error": 500,
+  "invalid_meta": 422,
+  "invalid_request": 400,
+  "method_not_allowed": 405,
+  "not_found": 404,
+  "not_ready": 503,
+  "overloaded": 503,
+  "payload_too_large": 413,
+  "point_not_adjustable": 422,
+  "rate_limited": 429,
+  "session_mismatch": 400,
+  "subject_mismatch": 400,
+  "token_invalid": 400,
+  "token_stale": 400,
+  "too_many_pixels": 422,
+  "unsupported_media_type": 415
+}

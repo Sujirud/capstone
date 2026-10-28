@@ -1,0 +1,19 @@
+{
+  "request_id": "req_fixture",
+  "status": "contour_failed",
+  "failed_checks": [
+    "profile_points",
+    "landmark_order"
+  ],
+  "hints": [
+    "Turn exactly sideways, close your lips gently, and keep hair, hands and clothing away from your face outline."
+  ],
+  "warnings": [
+    "distance_unverified"
+  ],
+  "versions": {
+    "api": "0.1.0",
+    "core": "0.1.0",
+    "schema": "2.0"
+  }
+}

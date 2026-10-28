@@ -1,0 +1,23 @@
+{
+  "request_id": "req_fixture",
+  "status": "quality_failed",
+  "failed_checks": [
+    "pitch_deg",
+    "expression_mouthSmileLeft",
+    "expression_mouthSmileRight",
+    "ipd_px"
+  ],
+  "hints": [
+    "เงยคางขึ้นเล็กน้อย",
+    "ผ่อนคลายใบหน้าให้อยู่ในสีหน้าเรียบ ๆ ไม่ยิ้ม",
+    "ใบหน้าในภาพเล็กเกินไป กรุณาซูมเข้า (2–3 เท่า) หรือใช้กล้องที่ความละเอียดสูงขึ้น แทนการเข้าใกล้กล้อง"
+  ],
+  "warnings": [
+    "distance_unverified"
+  ],
+  "versions": {
+    "api": "0.1.0",
+    "core": "0.1.0",
+    "schema": "2.0"
+  }
+}

@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+# Model files are fetched with `python -m facescan.tools.download_models`.
+models/
+# CLI / capture outputs.
+out/

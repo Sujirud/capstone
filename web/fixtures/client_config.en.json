@@ -1,0 +1,246 @@
+{
+  "config_hash": "sha256:c2d2e91fc9752f59dbaf927f35c0f24beb23f2549010453eb72bdc5b30da220b",
+  "core_version": "0.1.0",
+  "frontal": {
+    "burst": {
+      "max_frames": 15,
+      "min_frames": 3,
+      "min_point_frame_frac": 0.5,
+      "recommended_frames": 7,
+      "tta_below_frames": 5
+    },
+    "gates": {
+      "camera_distance_min_m": 1.0,
+      "camera_distance_recommended_m": 1.5,
+      "exposure_clip_high": 250,
+      "exposure_clip_low": 5,
+      "exposure_clipped_max_frac": 0.02,
+      "exposure_mean_max": 205.0,
+      "exposure_mean_min": 60.0,
+      "expression": {
+        "browInnerUp": 0.3,
+        "eyeBlinkLeft": 0.4,
+        "eyeBlinkRight": 0.4,
+        "jawOpen": 0.1,
+        "mouthSmileLeft": 0.2,
+        "mouthSmileRight": 0.2
+      },
+      "ipd_min_px": 150.0,
+      "pitch_max_deg": 5.0,
+      "roi_width_px": 256,
+      "roll_max_deg": 10.0,
+      "sharpness_min": 25.0,
+      "yaw_max_deg": 5.0
+    },
+    "guided_capture": {
+      "consecutive_pass_frames": 20,
+      "keep_best_frames": 15,
+      "one_euro": {
+        "beta": 0.05,
+        "d_cutoff": 1.0,
+        "min_cutoff": 1.0
+      }
+    },
+    "iris_diameter_mm": 11.7
+  },
+  "locale": "en",
+  "overlay": {
+    "layers": [
+      "landmarks",
+      "thirds",
+      "fifths",
+      "eyes_brows",
+      "nose_lips",
+      "profile_lines",
+      "golden_ratio",
+      "labels"
+    ],
+    "max_side_px": 1600
+  },
+  "profile": {
+    "gates": {
+      "anterior_tolerance_frac": 0.005,
+      "camera_distance_min_m": 1.0,
+      "contrast_min": 6.0,
+      "max_head_tilt_deg": 20.0
+    }
+  },
+  "rules_version": "EXAMPLE",
+  "schema_version": "2.0",
+  "strings": {
+    "capture": {
+      "frontal": {
+        "steps": [
+          "Ask a helper to take the photo with the rear camera from about 1.5 m using 2–3× zoom, or put the phone on a stand at eye level and use the timer or voice control.",
+          "Please do not take an arm's-length selfie: at short distances the nose and mid-face look larger than they are.",
+          "Stand in front of a plain, light background with even light on your face.",
+          "Pull your hair back so your hairline and temples are visible, and take off glasses.",
+          "Keep your head level and look straight at the lens.",
+          "Relax your face: neutral expression, lips gently closed."
+        ],
+        "title": "How to take the front photo"
+      },
+      "profile": {
+        "steps": [
+          "Turn exactly sideways to the camera (90°), taken the same way as the front photo.",
+          "Use a plain background that contrasts with your skin and hair.",
+          "Tuck your hair behind your ear and keep the camera level.",
+          "Look straight ahead at a point at eye level.",
+          "Keep your chin and some of your neck visible, with your collar below your chin and nothing in front of your face or neck."
+        ],
+        "title": "How to take the side photo"
+      }
+    },
+    "check": {
+      "background_contrast": "Background contrast",
+      "burst_good_frames": "Usable frames",
+      "camera_distance_m": "Camera distance",
+      "contour_continuous": "Complete profile outline",
+      "exposure_clipped_frac": "Glare and shadows",
+      "exposure_mean": "Brightness",
+      "expression_browInnerUp": "Relaxed eyebrows",
+      "expression_eyeBlinkLeft": "Eyes open",
+      "expression_eyeBlinkRight": "Eyes open",
+      "expression_jawOpen": "Lips closed",
+      "expression_mouthSmileLeft": "Neutral mouth",
+      "expression_mouthSmileRight": "Neutral mouth",
+      "face_count": "One face in the photo",
+      "face_in_frame": "Whole face in the photo",
+      "facing": "Facing direction",
+      "head_tilt_deg": "Head level",
+      "ipd_px": "Face size in the photo",
+      "landmark_order": "Profile outline shape",
+      "pitch_deg": "Chin up or down",
+      "profile_points": "Profile points found",
+      "pronasale_most_anterior": "Nose tip position",
+      "roll_deg": "Head tilt",
+      "sharpness": "Sharpness",
+      "yaw_deg": "Head turned left or right"
+    },
+    "disclaimer": {
+      "consult": "Please consult a licensed plastic surgeon in person before making any decision.",
+      "general": "This app shows measurements of facial proportions for information only. It is not a medical diagnosis or a treatment recommendation. Measurements depend on the photo and have limited precision, and proportions differ naturally between people. If you are considering any procedure, please consult a licensed plastic surgeon in person."
+    },
+    "hint": {
+      "avoid_glare": "Avoid strong light or deep shadows on your face.",
+      "chin_down": "Lower your chin slightly.",
+      "chin_up": "Raise your chin slightly.",
+      "close_mouth": "Close your lips gently.",
+      "distance_unverified": "The camera distance could not be checked for this photo.",
+      "face_in_frame": "Make sure your whole face, from hairline to chin, is inside the photo.",
+      "face_too_small": "Your face is too small in the photo. Zoom in (2–3×) or use a higher-resolution camera instead of moving closer.",
+      "head_level": "Keep your head level, without tilting it.",
+      "hold_still": "Hold still and make sure the camera is focused on your face.",
+      "less_light": "Reduce the light on your face or avoid direct light.",
+      "more_light": "Find brighter, even light on your face.",
+      "move_back": "Move the camera a little farther away (about 1.5 m) and use 2–3× zoom.",
+      "multiple_faces": "More than one face was found. Only the person being measured should be in the photo.",
+      "neutral_expression": "Relax your face into a neutral expression.",
+      "no_face": "No face was found. Face the camera so your whole face is visible.",
+      "open_eyes": "Keep your eyes open and look at the lens.",
+      "profile_background": "Use a plain background that contrasts with your skin and hair.",
+      "profile_facing": "Turn so that your nose points to the side shown in the app.",
+      "profile_in_frame": "Keep your whole profile, from forehead to neck, inside the photo, with nothing in front of your face or neck.",
+      "profile_level": "Keep your head level and look straight ahead at a point at eye level.",
+      "profile_pose": "Turn exactly sideways, close your lips gently, and keep hair, hands and clothing away from your face outline.",
+      "relax_brows": "Relax your eyebrows.",
+      "relax_smile": "Relax your face into a neutral expression, without smiling.",
+      "turn_left": "Turn your head slightly to your left.",
+      "turn_right": "Turn your head slightly to your right."
+    },
+    "point": {
+      "alar_crease": {
+        "instruction": "Place the point where the side of your nose meets your cheek.",
+        "name": "Side of the nose"
+      },
+      "glabella": {
+        "instruction": "Slide the point along the outline to the most forward point between your eyebrows.",
+        "name": "Forehead between the eyebrows"
+      },
+      "labrale_inferius": {
+        "instruction": "Slide the point to the most forward point of your lower lip.",
+        "name": "Lower lip"
+      },
+      "labrale_superius": {
+        "instruction": "Slide the point to the most forward point of your upper lip.",
+        "name": "Upper lip"
+      },
+      "menton": {
+        "instruction": "Slide the point to the lowest point of your chin.",
+        "name": "Bottom of the chin"
+      },
+      "nasion": {
+        "instruction": "Slide the point to the deepest point between your forehead and nose.",
+        "name": "Top of the nose"
+      },
+      "pronasale": {
+        "instruction": "Slide the point to the most forward point of your nose.",
+        "name": "Nose tip"
+      },
+      "soft_tissue_pogonion": {
+        "instruction": "Slide the point to the most forward point of your chin.",
+        "name": "Chin"
+      },
+      "subnasale": {
+        "instruction": "Slide the point to where the base of your nose meets your upper lip.",
+        "name": "Base of the nose"
+      },
+      "trichion": {
+        "instruction": "Drag the point to where your hairline meets your forehead, in the middle of your face.",
+        "name": "Hairline"
+      }
+    },
+    "reference": {
+      "canon": "Classical proportion reference",
+      "note": "Reference ranges describe classical proportions or typical measurements. Faces differ naturally, and values outside a range are common.",
+      "population": "Typical range"
+    },
+    "side_note": "Right and left refer to your own right and left.",
+    "status": {
+      "above": "Above the reference range",
+      "below": "Below the reference range",
+      "inconclusive": "Too close to the reference limit to tell apart from measurement variation",
+      "no_reference": "Shown for information",
+      "unavailable": "Could not be measured from this photo",
+      "within": "Within the reference range"
+    },
+    "warning": {
+      "distance_unverified": "The camera distance could not be verified, so these measurements are shown for information only.",
+      "no_frontal_scale": "Millimetre values need the front photo from the same session, so only proportions are shown."
+    }
+  },
+  "upload_limits": {
+    "accepted_types": [
+      "image/jpeg",
+      "image/png",
+      "image/webp"
+    ],
+    "max_burst_pixels": 125000000,
+    "max_frames": 15,
+    "max_image_bytes": 12000000,
+    "max_pixels": 24000000,
+    "max_request_bytes": 60000000
+  },
+  "user_adjustable_points": {
+    "frontal": [
+      "trichion"
+    ],
+    "profile": [
+      "trichion",
+      "glabella",
+      "nasion",
+      "pronasale",
+      "subnasale",
+      "labrale_superius",
+      "labrale_inferius",
+      "soft_tissue_pogonion",
+      "menton",
+      "alar_crease"
+    ]
+  },
+  "versions": {
+    "api": "0.1.0",
+    "core": "0.1.0",
+    "schema": "2.0"
+  }
+}

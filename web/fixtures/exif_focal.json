@@ -1,0 +1,178 @@
+{
+  "cases": [
+    {
+      "name": "35 mm-equivalent",
+      "raw": [
+        4032,
+        3024
+      ],
+      "tags": {
+        "FocalLengthIn35mmFormat": 26
+      },
+      "focal_px": 3028.6630713897507
+    },
+    {
+      "name": "35 mm-equivalent, 2x lens",
+      "raw": [
+        4032,
+        3024
+      ],
+      "tags": {
+        "FocalLengthIn35mmFormat": 52,
+        "FocalLength": 6.86
+      },
+      "focal_px": 6057.326142779501
+    },
+    {
+      "name": "35 mm-equivalent wins over the focal plane",
+      "raw": [
+        3000,
+        4000
+      ],
+      "tags": {
+        "FocalLengthIn35mmFormat": 28,
+        "FocalLength": 4.2,
+        "FocalPlaneXResolution": 7142.857142857143,
+        "FocalPlaneResolutionUnit": 3
+      },
+      "focal_px": 3235.7511446471694
+    },
+    {
+      "name": "focal plane in inches (default unit)",
+      "raw": [
+        4000,
+        3000
+      ],
+      "tags": {
+        "FocalLength": 4.2,
+        "FocalPlaneXResolution": 18142.85714285714
+      },
+      "focal_px": 3000.0
+    },
+    {
+      "name": "focal plane in cm",
+      "raw": [
+        4000,
+        3000
+      ],
+      "tags": {
+        "FocalLength": 4.2,
+        "FocalPlaneXResolution": 7142.857142857143,
+        "FocalPlaneResolutionUnit": 3
+      },
+      "focal_px": 3000.0000000000005
+    },
+    {
+      "name": "focal plane in mm",
+      "raw": [
+        4000,
+        3000
+      ],
+      "tags": {
+        "FocalLength": 4.2,
+        "FocalPlaneXResolution": 714.2857142857143,
+        "FocalPlaneResolutionUnit": 4
+      },
+      "focal_px": 3000.0000000000005
+    },
+    {
+      "name": "focal plane in µm",
+      "raw": [
+        4000,
+        3000
+      ],
+      "tags": {
+        "FocalLength": 4.2,
+        "FocalPlaneXResolution": 0.7142857142857143,
+        "FocalPlaneResolutionUnit": 5
+      },
+      "focal_px": 3000.0000000000005
+    },
+    {
+      "name": "stored image smaller than the sensor image",
+      "raw": [
+        2000,
+        1500
+      ],
+      "tags": {
+        "FocalLength": 4.2,
+        "FocalPlaneXResolution": 714.2857142857143,
+        "FocalPlaneResolutionUnit": 4,
+        "ExifImageWidth": 4000
+      },
+      "focal_px": 1500.0000000000002
+    },
+    {
+      "name": "35 mm value 0 falls back to the focal plane",
+      "raw": [
+        4000,
+        3000
+      ],
+      "tags": {
+        "FocalLengthIn35mmFormat": 0,
+        "FocalLength": 4.2,
+        "FocalPlaneXResolution": 714.2857142857143,
+        "FocalPlaneResolutionUnit": 4
+      },
+      "focal_px": 3000.0000000000005
+    },
+    {
+      "name": "unknown resolution unit",
+      "raw": [
+        4000,
+        3000
+      ],
+      "tags": {
+        "FocalLength": 4.2,
+        "FocalPlaneXResolution": 714.2857142857143,
+        "FocalPlaneResolutionUnit": 7
+      },
+      "focal_px": null
+    },
+    {
+      "name": "focal length without resolution",
+      "raw": [
+        4000,
+        3000
+      ],
+      "tags": {
+        "FocalLength": 4.2
+      },
+      "focal_px": null
+    },
+    {
+      "name": "implausibly long",
+      "raw": [
+        4032,
+        3024
+      ],
+      "tags": {
+        "FocalLengthIn35mmFormat": 2000
+      },
+      "focal_px": null
+    },
+    {
+      "name": "implausibly short",
+      "raw": [
+        4032,
+        3024
+      ],
+      "tags": {
+        "FocalLengthIn35mmFormat": 1
+      },
+      "focal_px": null
+    },
+    {
+      "name": "no EXIF",
+      "raw": [
+        4032,
+        3024
+      ],
+      "tags": {},
+      "focal_px": null
+    }
+  ],
+  "photos": {
+    "photo.jpg": 2894.4391128123216
+  }
+}

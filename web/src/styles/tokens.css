@@ -1,0 +1,159 @@
+/*
+ * Design tokens: the only place colours, type, spacing and radii
+ * are defined. Components use them through Tailwind utilities (the @theme block maps
+ * them; Tailwind's default palette, fonts and scales are never loaded) or as var(--name).
+ * tests/tokens.test.ts parses this file and checks the contrast rules.
+ */
+
+:root {
+  color-scheme: light;
+
+  /* Colour: paper and ink, with one accent from the overlay's hue. The overlay's accent is
+     USER_ACCENT #409CFF (facescan/render/overlay.py), 2.8 : 1 on white, so the UI uses a
+     darker step of the same blue. If the overlay palette changes, update --accent. */
+  --paper: #f6f4ef;        /* page background */
+  --surface: #ffffff;      /* measurement sheet, inputs; text on --ink */
+  --ink: #1b1e22;          /* primary text, primary button */
+  --ink-2: #4d535b;        /* secondary text, in-range range-bar marker */
+  --ink-3: #656a72;        /* metadata: dates, versions, request ids (on paper or surface only) */
+  --line: #ddd9d0;         /* hairline dividers (decorative) */
+  --line-strong: #7d8289;  /* input borders, range-bar ticks */
+  --accent: #1c64c4;       /* links, focus ring, selected state, out-of-range emphasis */
+  --accent-band: #dce7f7;  /* reference band on the range bar */
+  --notice: #ece8df;       /* notice background */
+  --viewer: #2a2d31;       /* neutral surround for photos */
+  --error: #a33a2b;        /* form validation on the subject screens only */
+
+  /* Point markers drawn by the app (adjustment view, client-drawn points): the core's
+     `user` overlay palette in facescan/render/overlay.py, so both read as one system. */
+  --point: #f5f5f5;        /* point, high confidence */
+  --point-low: #c8c8c8;    /* point_low, low confidence */
+  --point-shadow: #282828; /* shadow: outline so points stay visible on light skin */
+
+  /* Type: one family, three weights, five sizes: 14 / 16 / 18 / 22 / 28 px at the
+     browser's default size, in rem so text follows the reader's own text-size setting. */
+  --font-family: "IBM Plex Sans Thai", sans-serif;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.375rem;
+  --fs-2xl: 1.75rem;
+  --leading-body: 1.7;     /* Thai marks above and below the line need the room */
+  --leading-heading: 1.35;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  /* Spacing: a 4 px scale. Names are multiples of 4 px, as in Tailwind (p-4 = 16 px). */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* Radius: controls and the photo viewer only; everything else is square. No shadows. */
+  --r-control: 4px;
+  --r-viewer: 8px;
+
+  /* Layout */
+  --page-max: 640px;       /* single column */
+  --page-wide: 1200px;     /* two-column results at ≥ 1024 px, the component page */
+  --field-max: 28rem;      /* text inputs and choice lists */
+  --field-short: 10rem;    /* short inputs such as age */
+  --target: 44px;          /* minimum size of primary controls (WCAG 2.5.8) */
+  --rule: 3px;             /* notice left rule */
+
+  /* Motion: short ease-out, opacity and ≤ 8 px movement only. */
+  --duration: 180ms;
+  --ease: cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Print: black on white. Secondary text stays a dark grey for hierarchy; the accent
+   becomes black, and index.css gives accent text weight 600 instead. Photos sit on white. */
+@media print {
+  :root {
+    --paper: #ffffff;
+    --surface: #ffffff;
+    --ink: #000000;
+    --ink-2: #333333;
+    --ink-3: #333333;
+    --line: #9a9a9a;
+    --line-strong: #555555;
+    --accent: #000000;
+    --accent-band: #e6e6e6;
+    --notice: #ffffff;
+    --viewer: #ffffff;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-band: var(--accent-band);
+  --color-notice: var(--notice);
+  --color-viewer: var(--viewer);
+  --color-error: var(--error);
+  --color-point: var(--point);
+  --color-point-low: var(--point-low);
+  --color-point-shadow: var(--point-shadow);
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  --font-sans: var(--font-family);
+  --text-sm: var(--fs-sm);
+  --text-sm--line-height: var(--leading-body);
+  --text-base: var(--fs-base);
+  --text-base--line-height: var(--leading-body);
+  --text-lg: var(--fs-lg);
+  --text-lg--line-height: var(--leading-heading);
+  --text-xl: var(--fs-xl);
+  --text-xl--line-height: var(--leading-heading);
+  --text-2xl: var(--fs-2xl);
+  --text-2xl--line-height: var(--leading-heading);
+  --font-weight-normal: var(--weight-regular);
+  --font-weight-medium: var(--weight-medium);
+  --font-weight-semibold: var(--weight-semibold);
+
+  --spacing-0: 0px;
+  --spacing-1: var(--space-1);
+  --spacing-2: var(--space-2);
+  --spacing-3: var(--space-3);
+  --spacing-4: var(--space-4);
+  --spacing-6: var(--space-6);
+  --spacing-8: var(--space-8);
+  --spacing-12: var(--space-12);
+  --spacing-target: var(--target);
+
+  --radius-control: var(--r-control);
+  --radius-viewer: var(--r-viewer);
+
+  --container-page: var(--page-max);
+  --container-wide: var(--page-wide);
+  --container-field: var(--field-max);
+  --container-field-short: var(--field-short);
+
+  --default-transition-duration: var(--duration);
+  --default-transition-timing-function: var(--ease);
+  --ease-out: var(--ease);
+  --animate-indeterminate: indeterminate 1.6s linear infinite;
+
+  @keyframes indeterminate {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(250%); }
+  }
+}
+
+/* Breakpoints are literal (media queries cannot read custom properties): 640 px is the
+   single-column maximum, 1024 px the two-column results layout. */
+@theme {
+  --breakpoint-md: 640px;
+  --breakpoint-lg: 1024px;
+}

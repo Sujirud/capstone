@@ -1,0 +1,165 @@
+# Capture, processing and consumer-safety settings.
+#
+# Every number in this file is a SOFTWARE DEFAULT to be tuned on real captures,
+# not a clinical value. Clinical values live in norms.yaml and the
+# clinical team's rules file.
+version: "1"
+
+frontal:
+  gates:
+    # Camera distance ≈ focal_px × iris_diameter_mm ÷ iris_px.
+    camera_distance_min_m: 1.0
+    camera_distance_recommended_m: 1.5
+    # Head pose from the facial transformation matrix (degrees).
+    yaw_max_deg: 5.0
+    pitch_max_deg: 5.0
+    roll_max_deg: 10.0          # roll is corrected in software (face axes)
+    # Neutral expression: each blendshape score must be strictly below its limit.
+    expression:
+      jawOpen: 0.10
+      mouthSmileLeft: 0.20
+      mouthSmileRight: 0.20
+      eyeBlinkLeft: 0.40
+      eyeBlinkRight: 0.40
+      browInnerUp: 0.30
+    # Face size: inter-pupillary distance in pixels.
+    ipd_min_px: 150.0
+    # Sharpness: variance of the Laplacian on the face ROI after resizing the
+    # ROI to `roi_width_px` wide (so the value does not depend on resolution).
+    sharpness_min: 25.0
+    roi_width_px: 256
+    # Exposure on face-skin pixels (luma 0–255).
+    exposure_mean_min: 60.0
+    exposure_mean_max: 205.0
+    exposure_clip_low: 5
+    exposure_clip_high: 250
+    exposure_clipped_max_frac: 0.02
+
+  burst:
+    min_frames: 3
+    max_frames: 15
+    recommended_frames: 7
+    # With fewer frames than this, metric uncertainty is the larger of the
+    # across-frame SD and a test-time-augmentation estimate.
+    tta_below_frames: 5
+    # A named point must be found in at least this fraction of the used frames.
+    min_point_frame_frac: 0.5
+
+  guided_capture:
+    consecutive_pass_frames: 20
+    keep_best_frames: 15
+    # One-Euro filter for the displayed guidance values only.
+    one_euro: {min_cutoff: 1.0, beta: 0.05, d_cutoff: 1.0}
+
+  tta:
+    runs: 10
+    scale_frac: 0.05            # random scale ±5 %
+    shift_frac: 0.03            # random shift ±3 % of the face box
+    rotation_deg: 3.0           # random rotation ±3°
+    min_successful_runs: 3      # fewer → uncertainty unavailable
+
+profile:
+  gates:
+    # Median Mahalanobis distance of face-skin pixels from the background colour model.
+    contrast_min: 6.0
+    # The found pronasale may be behind the most anterior face point by at most this
+    # fraction of the face height (0 = must be the most anterior point).
+    anterior_tolerance_frac: 0.005
+    # Head pitch: angle of the forehead-to-chin line from the image vertical. Natural head
+    # position keeps it small; larger tilts bias the true-vertical measurements (P5).
+    max_head_tilt_deg: 20.0
+    # Camera distance ≈ profile mm/px × focal_px (needs a frontal scale); same minimum as frontal.
+  segmentation:
+    coarse_input_px: 512
+    min_face_px: 40              # face-skin component (coarse 512-px grid) smaller than this → no face
+    second_face_frac: 0.25       # another face-skin component ≥ this × the largest → multiple faces
+    head_crop_scale: 2.0         # crop side = scale × max(face-skin box width, height)
+    work_max_px: 1600            # the head crop is processed at most this large (long side)
+    bg_margin_cells: 3.0         # background samples lie ≥ this many mask cells from the person
+    band_cells: 3.0              # colour threshold only within this many cells of the mask boundary
+    min_bg_pixels: 500
+    cov_reg: 4.0                 # added to the Lab covariance diagonal
+    threshold_min: 3.0           # minimum Mahalanobis threshold (Otsu may raise it)
+    close_radius_frac: 0.006     # close notches narrower than ≈ 2 × this × face height (e.g. a dark nostril)
+  contour:
+    smooth_window_frac: 0.012    # Savitzky–Golay window, fraction of the face height
+    smooth_polyorder: 3
+    curvature_span_frac: 0.012   # turning angle measured over ± this fraction of the face height
+    stored_points: 400           # contour stored in the result (at most 400)
+    top_margin_frac: 0.35        # profile segment runs from this far above the face-skin top…
+    bottom_margin_frac: 0.35     # …to this far below its bottom
+    pronasale_window: [0.25, 0.80]   # rows searched for pronasale (fraction of face-skin height)
+    nasion_min_depth_frac: 0.01  # nasion ≥ this × face height behind both glabella and pronasale (≈ 1 mm)
+    lip_prominence_frac: 0.003
+    max_rotation_deg: 25.0       # landmarks are found in a face-aligned frame, rotated at most this much
+    min_chin_drop_frac: 0.02     # menton must lie ≥ this × face height below pogonion (chin underside visible)
+    neck_len_frac: 0.10          # a cervical point needs this much visible skin (neck) after it…
+    neck_rise_frac: 0.005        # …along which the contour comes forward by at most this × face height
+    glabella_window_frac: 0.35   # glabella searched up to this far above the nasion
+    columella_fit: [0.40, 0.90]  # columella tangent fitted on this part of the pronasale→subnasale arc
+    cervical_window_frac: 0.5    # cervical point searched within this arc length below pogonion
+    cervical_min_turn_deg: 15.0  # minimum concave turning at the cervical point
+    inward_offset_cells: 1.5     # classes are sampled this far inside the silhouette
+    hair_run_cells: 2.0          # a skin → hair transition must be followed by this much hair
+    trichion_fringe_cells: 3.0   # other classes allowed between skin and hair at the outline (3-class junction)
+    min_forehead_frac: 0.3       # trichion ≥ this × nasion→subnasale above the glabella
+  transfer:
+    max_disagreement_frac: 0.05  # > 5 % between the two estimates → unavailable
+
+scale:
+  iris_diameter_mm: 11.7
+  iris_rel_uncertainty: 0.04    # adult iris diameter varies by about ±0.5 mm
+  max_iris_diff_frac: 0.10      # reject iris scale if the eyes differ by > 10 %
+
+hairline:
+  # Segmentation runs on a square head crop centred between the top of the mesh
+  # and the menton, `crop_scale` × that distance wide, to get finer mask cells.
+  crop_scale: 2.2
+  crop_center_frac: 0.35        # 0 = top of mesh, 1 = menton
+  # A face-skin → hair transition must be followed by this many mask cells of hair.
+  hair_run_min_cells: 2.0
+  # The transition must be at least this far above the glabella (fraction of the
+  # glabella→subnasale distance); lower means hair likely covers the forehead.
+  min_forehead_frac: 0.5
+  # Scan at most this far above the glabella (fraction of glabella→subnasale).
+  max_scan_frac: 2.2
+  # Two extra scans, offset sideways by this fraction of the intercanthal distance…
+  lateral_offset_frac_icd: 0.25
+  # …must agree with the midline scan within this fraction of glabella→subnasale.
+  max_lateral_spread_frac: 0.25
+
+temporal_boundary:
+  # The outer fifth is unavailable when hair covers more than `max_hair_frac`
+  # of a window (half-size = `window_frac_icd` × ICD) around the boundary point.
+  window_frac_icd: 0.15
+  max_hair_frac: 0.30
+
+overrides:
+  # Points a consumer may move. Clinicians may move any point.
+  user_adjustable_points:
+    frontal: [trichion]
+    profile: [trichion, glabella, nasion, pronasale, subnasale, labrale_superius,
+              labrale_inferius, soft_tissue_pogonion, menton, alar_crease]
+  # An adjustment farther than this fraction of nasion→menton is "large" (placeholder).
+  large_adjustment_frac: 0.03
+  # SD assigned to a manually placed point, as a fraction of nasion→menton (placeholder).
+  manual_placement_sd_frac: 0.01
+  landmark_sampling_runs: 200
+  landmark_sampling_seed: 314
+
+reference:
+  # Status is "inconclusive" when an out-of-range deviation is ≤ k × uncertainty.
+  inconclusive_k: 2.0
+  # Minimum samples (frames / TTA runs / draws) for an uncertainty estimate.
+  min_uncertainty_samples: 3
+
+render:
+  # Thai-capable fonts, first existing path wins. Set EngineConfig.font_path to override.
+  font_candidates:
+    - /usr/share/fonts/truetype/noto/NotoSansThai-Regular.ttf
+    - /usr/share/fonts/opentype/noto/NotoSansThai-Regular.ttf
+    - /usr/share/fonts/noto/NotoSansThai-Regular.ttf
+    - /usr/share/fonts/truetype/noto/NotoSansThaiUI-Regular.ttf
+    - /System/Library/Fonts/Supplemental/Ayuthaya.ttf
+    - /System/Library/Fonts/Supplemental/Sathu.ttf
+    - /System/Library/Fonts/Thonburi.ttc

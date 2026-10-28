@@ -1,0 +1,328 @@
+{
+  "app": {
+    "name": "Facial proportions",
+    "skipToContent": "Skip to main content",
+    "documentTitle": "{{screen}} · Facial proportions"
+  },
+  "nav": {
+    "back": "Back",
+    "otherLanguage": "ภาษาไทย"
+  },
+  "steps": {
+    "indicator": "Step {{current}} of {{total}} · {{label}}",
+    "subject": "About you",
+    "frontal": "Front photo",
+    "profile": "Side photo",
+    "results": "Report"
+  },
+  "subject": {
+    "sex": {
+      "title": "Your sex",
+      "help": "Only used to choose the reference values.",
+      "female": "Female",
+      "male": "Male",
+      "unspecified": "Not specified",
+      "error": "Choose one option."
+    },
+    "age": {
+      "title": "Your age",
+      "label": "Age in years",
+      "help": "Whole years, from 1 to 120. Your age is part of the analysis.",
+      "error": "Enter an age from 1 to 120, in whole years."
+    },
+    "continue": "Continue"
+  },
+  "guide": {
+    "distance": "Recommended distance: about {{distance}} m",
+    "takePhoto": "Take a photo",
+    "choosePhoto": "Choose a photo",
+    "chooseNote": "Choosing a photo taken with a phone: moving it by AirDrop, a cable or a cloud drive keeps it as it is. Messaging apps often shrink photos or remove the camera details used to check the camera distance.",
+    "likeThis": "Like this",
+    "notLikeThis": "Not like this",
+    "drawing": {
+      "distanceLabel": "about {{distance}} m",
+      "distance": "A helper stands about {{distance}} m away and takes the photo with the rear camera",
+      "zoom": "The camera screen with 2× zoom selected",
+      "selfie": "Not an arm's-length selfie",
+      "background": "Standing in front of a plain, light background",
+      "hair": "Hair pulled back so the hairline shows, and no glasses",
+      "level": "Head level, eyes level with the camera",
+      "neutral": "A neutral expression, lips gently closed"
+    },
+    "preflight": {
+      "unsupported_type": "This file is not a photo the service can use. Please use a JPEG, PNG or WebP photo.",
+      "too_large": "The photo file is larger than the {{limit}} MB the service accepts. Please take it again with the camera's 12 MP setting.",
+      "too_many_pixels": "The photo has more than the {{limit}} megapixels the service accepts. Please take it again with 2× zoom or the camera's 12 MP setting.",
+      "unreadable": "This photo could not be read. Please take it again or choose another photo.",
+      "heic_failed": "This HEIC photo could not be converted. Please set the camera to save JPEG and take it again.",
+      "front_camera": "This photo seems to be from the front camera, which may mirror it and swap left and right. Please use the rear camera if you can, or continue with this photo."
+    }
+  },
+  "languages": {
+    "th": "ไทย",
+    "en": "English"
+  },
+  "service": {
+    "loading": "Loading the service settings",
+    "unreachableTitle": "The service is not reachable",
+    "unreachableBody": "The app cannot reach the analysis service right now, so a scan cannot start. Please check the internet connection and try again.",
+    "retry": "Try again"
+  },
+  "errors": {
+    "generic": "Something unexpected went wrong. Please try again.",
+    "network": "The service could not be reached. Please check the internet connection and try again.",
+    "scanEnded": "This scan has ended. You can analyze the same photo again or start over.",
+    "scanEnded_both": "This scan has ended. You can analyze the same photos again or start over.",
+    "rateLimited_one": "The usage limit has been reached. Please try again in about {{count}} minute.",
+    "rateLimited_other": "The usage limit has been reached. Please try again in about {{count}} minutes.",
+    "busy": "The service is busy. Please try again in a moment.",
+    "timeout": "The analysis took too long. You can try again.",
+    "photo": {
+      "payload_too_large": "The photo file is larger than the service accepts. Please take it again with the camera's 12 MP setting.",
+      "unsupported_media_type": "Only JPEG, PNG or WebP photos can be used.",
+      "too_many_pixels": "The photo has more pixels than the service accepts. Please take it again with 2× zoom or the camera's 12 MP setting.",
+      "frame_size_mismatch": "The photos in this set have different sizes. Please take them again."
+    },
+    "requestId": "Request ID"
+  },
+  "results": {
+    "title": "Front photo results",
+    "adjust": "Adjust points",
+    "newScan": "Start a new scan",
+    "saved_one": "Position saved",
+    "saved_other": "Positions saved",
+    "reset": "Automatic positions restored",
+    "overlayFailed": "The measurement lines could not be redrawn, so only the points are shown.",
+    "moreDetails": "More details",
+    "otherArea": "Other measurements",
+    "noValue": "No value",
+    "addProfile": "Add a side photo",
+    "seeProfile": "See the side photo results"
+  },
+  "scan": {
+    "versionsLabel": "Versions"
+  },
+  "progress": {
+    "uploading": "Uploading {{percent}} %",
+    "analyzing": "Analyzing the photo · usually takes 2–5 seconds",
+    "elapsed": "{{seconds}} s"
+  },
+  "viewer": {
+    "label": "Photo view",
+    "overlay": "With measurement lines",
+    "original": "Original",
+    "altOverlay": "Your photo with measurement lines",
+    "altOriginal": "Your photo",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out"
+  },
+  "preview": {
+    "title": "Check the photo",
+    "help": "The photo is sent for analysis as it is, without changes, and it is not stored.",
+    "use": "Use this photo",
+    "retake": "Retake",
+    "chooseAnother": "Choose another photo"
+  },
+  "analyzing": {
+    "title": "Sending and analyzing the photo",
+    "cancel": "Cancel"
+  },
+  "retake": {
+    "title": "Please take the photo again",
+    "intro": "This photo cannot be measured yet. For the next photo:",
+    "checksHeading": "Checks not passed",
+    "protocolIntro": "After {{count}} tries, here is the whole guide again.",
+    "backToGuide": "See the guide"
+  },
+  "live": {
+    "title": "Live camera",
+    "intro": "The camera view stays on this page. Hints appear while the person gets into position, and the photos are taken automatically once every check passes.",
+    "beforeHeading": "Before you start",
+    "before": {
+      "stand": "Put the phone on a stand at eye level about {{distance}} m away, or have a helper hold it there. Use the rear camera if you can.",
+      "size": "From that distance, the face has to look large enough in the picture to be measured: usually it does with a phone's rear camera at 2× zoom, but not with most laptop webcams. The page tells you if the face is too small. Please do not move closer to fix it: at short distances the nose and mid-face look larger than they are.",
+      "distance": "The report will have no discussion topics, because the page cannot check the camera distance by itself. The measurements are all still shown. Calibrating the distance fixes this, once the camera is on: measure {{distance}} m from the camera with a tape measure, and have the person stand still there for a moment.",
+      "profile": "The side photo is taken with the camera app, as its guide describes."
+    },
+    "start": "Start the camera",
+    "tryAgain": "Try again",
+    "photoMode": "Choose a photo instead",
+    "starting": "Starting the camera",
+    "loading": "Loading the face detection",
+    "cameraView": "Camera view",
+    "holdStill": "Hold still",
+    "preparing": "Preparing the photos: {{done}} of {{of}}",
+    "zoom": "Zoom",
+    "switchCamera": "Switch camera",
+    "speak": "Read the hints aloud",
+    "noVoice": "This device has no {{language}} voice to read the hints aloud.",
+    "faceTooSmall": "At about {{distance}} m this camera probably cannot show the face large enough to measure: about {{ipd}} px between the pupils, where {{min}} px are needed. Try more zoom, or use the camera app.",
+    "distanceUnverified": "The report will have no discussion topics until the distance is calibrated, because the page cannot check the camera distance by itself.",
+    "calibrate": "Calibrate the distance",
+    "calibrated": "The camera distance is checked with this camera's calibration.",
+    "calibrateAgain": "Calibrate again",
+    "calibration": {
+      "heading": "Calibrate the distance",
+      "measure": "Measure {{distance}} m from the camera to where the person will stand, with a tape measure.",
+      "stand": "The person stands there, faces the camera and holds still until the count is complete.",
+      "progress": "{{count}} of {{of}} frames",
+      "cancel": "Cancel the calibration",
+      "done": "The camera is calibrated. The distance is now checked for this camera, resolution and zoom."
+    },
+    "problem": {
+      "unsupported": "This browser cannot show the camera on a page. Please choose a photo instead.",
+      "denied": "The browser did not allow the camera. Allow camera access for this site in the browser's settings and try again, or choose a photo instead.",
+      "not_found": "No camera was found. Please choose a photo instead.",
+      "in_use": "The camera is being used by another app. Close that app and try again.",
+      "failed": "The camera could not be started. Please try again, or choose a photo instead.",
+      "model": "The face detection for the live camera could not be loaded. Please try again, or choose a photo instead.",
+      "detection_failed": "The face detection stopped working. Please try again, or choose a photo instead.",
+      "too_large": "This camera's frames are too large to send together. Please choose a photo instead.",
+      "frame_too_large": "A frame from this camera is larger than the service accepts. Please choose a photo instead.",
+      "too_few_frames": "The frames from this camera are too large to send together. Please choose a photo instead.",
+      "prepare_failed": "The photos could not be prepared. Please try again."
+    }
+  },
+  "newScan": {
+    "title": "Start a new scan?",
+    "body": "This scan's photo and results will be gone, because they are not stored.",
+    "body_both": "This scan's photos and results will be gone, because they are not stored.",
+    "confirm": "Start over",
+    "cancel": "Cancel"
+  },
+  "scanError": {
+    "retry": "Try again",
+    "startOver": "Start over",
+    "retake": "Retake",
+    "waitUntil": "You can try again at {{time}}",
+    "reanalyze": "Analyze the same photo again",
+    "reanalyze_both": "Analyze the same photos again"
+  },
+  "adjust": {
+    "title": "Adjust points",
+    "alt": "Your photo, for placing the point: {{name}}",
+    "keyboardHelp": "Drag the point, tap the photo to place it, or use the arrow keys. Hold Shift to move 10 pixels at a time.",
+    "moveGroup": "Move the point",
+    "move": {
+      "up": "Up",
+      "down": "Down",
+      "left": "Left",
+      "right": "Right"
+    },
+    "placeHint": "This point could not be found automatically. Tap the photo to place it; its value will be approximate.",
+    "imageMismatch": "The photo shown does not match the analyzed photo, so points cannot be adjusted. Please start a new scan.",
+    "save_one": "Save position",
+    "save_other": "Save positions",
+    "saving_one": "Saving the position",
+    "saving_other": "Saving the positions",
+    "cancel": "Cancel",
+    "reset": "Reset to automatic",
+    "pointGroup": "Point to adjust",
+    "keyboardHelpContour": "Drag the point along the outline, tap near the outline to place it there, or use the up and down arrow keys. Hold Shift to move 10 pixels at a time.",
+    "alongGroup": "Move along the outline",
+    "along": {
+      "up": "Toward the forehead",
+      "down": "Toward the chin"
+    },
+    "placeByHand": "Tap the photo to place this point. Values that use it will be approximate."
+  },
+  "language": {
+    "switchTitle": "Switch to {{language}}?",
+    "switchBody": "Results come from the service in the language used for the analysis. Switching analyzes the same photo again in the new language, and adjusted points are lost.",
+    "switchBody_both": "Results come from the service in the language used for the analysis. Switching analyzes the same photos again in the new language, and adjusted points are lost.",
+    "switchConfirm": "Switch and analyze again",
+    "switchCancel": "Keep the current language"
+  },
+  "profile": {
+    "facing": {
+      "label": "In the photo, the nose points",
+      "help": "The person being photographed turns so that the nose points this way.",
+      "left": "Left",
+      "right": "Right",
+      "check": "Check that the nose points this way in the photo."
+    },
+    "drawing": {
+      "turn": "Seen from above: the camera about {{distance}} m to the side, and the face turned 90° from it",
+      "background": "A side view in front of a plain background",
+      "hair": "Hair tucked behind the ear",
+      "gaze": "Looking straight ahead at a point at eye level",
+      "neck": "The chin and part of the neck in view, with the collar below the chin",
+      "alarCrease": "A close view of the nose from the side, with a ring where the side of the nose meets the cheek"
+    },
+    "results": {
+      "title": "Side photo results",
+      "noScale": "The scale from the front photo could not be carried over to this photo, so values in millimetres are not shown.",
+      "retake": "Take another side photo"
+    },
+    "alar": {
+      "body": "{{metric}} needs this point. It is not on the outline of the face, so it is placed by hand, and the value will be approximate.",
+      "bodyGeneric": "A measurement of the nose needs this point. It is not on the outline of the face, so it is placed by hand, and the value will be approximate.",
+      "action": "Place the point"
+    }
+  },
+  "landing": {
+    "lead": "This app measures facial proportions from a front photo and a side photo, and shows each measurement next to its reference range.",
+    "illustration": "A drawing of a result sheet: a photo with measurement lines, and measurements next to their reference ranges",
+    "madeBy": "A student capstone project, {{course}}.",
+    "team": "Made by {{names}}.",
+    "start": "Start"
+  },
+  "method": {
+    "title": "How it's measured",
+    "link": "How it's measured",
+    "landmarks": {
+      "heading": "Points on the face",
+      "body": "A face landmark model finds points such as the corners of the eyes, the nose and the mouth on the front photo."
+    },
+    "hairline": {
+      "heading": "The hairline",
+      "body": "The hairline is found with hair segmentation, which tells hair from skin. If it is not found or not placed well, it can be moved by hand."
+    },
+    "axes": {
+      "heading": "Along the face's own axes",
+      "body": "Horizontal and vertical measurements follow the line through the inner corners of the eyes and the line at right angles to it, so a slight head tilt does not change them."
+    },
+    "scale": {
+      "heading": "Millimetres",
+      "body": "Sizes in millimetres use the iris as a ruler: its diameter is about {{mm}} mm in adults and differs between people by about ±4 %."
+    },
+    "profile": {
+      "heading": "The side photo",
+      "body": "Points on the side photo are found on the outline of the face against the background, and the side of the nose is placed by hand. Its millimetres use the scale of the front photo from the same scan."
+    },
+    "uncertainty": {
+      "heading": "Precision",
+      "body": "Every value has an uncertainty, estimated by measuring slightly changed copies of the photo. A value too close to the edge of its range to tell apart from that uncertainty is shown as “{{inconclusive}}”."
+    },
+    "reference": {
+      "heading": "Reference ranges",
+      "body": "Values are compared with the “{{canon}}”. Faces differ naturally, and values outside a range are common."
+    },
+    "limits": {
+      "heading": "What the app cannot do",
+      "diagnose": "It does not diagnose anything or recommend any treatment.",
+      "photo": "Hair over the forehead, glasses and mirrored photos (from a front camera) change the results.",
+      "protocol": "The results depend on photos taken as the capture guide describes."
+    },
+    "privacy": {
+      "heading": "The photos",
+      "body": "Photos are analyzed in memory and are not stored. Closing or reloading the page ends the scan. This device keeps only the language, the last answers about sex and age, and the live camera's calibration if one was made."
+    }
+  },
+  "report": {
+    "title": "Report",
+    "see": "See the report",
+    "loading": "Preparing the report",
+    "exampleRules": "These discussion topics come from illustrative example rules, not from rules reviewed and approved by a clinical team.",
+    "topics": "Possible topics",
+    "measured": "Measurements",
+    "allMeasurements": "All measurements",
+    "print": "Save as PDF or print",
+    "table": {
+      "measurement": "Measurement",
+      "value": "Value",
+      "reference": "Reference range",
+      "status": "Status"
+    }
+  }
+}

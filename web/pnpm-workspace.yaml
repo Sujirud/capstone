@@ -1,0 +1,4 @@
+# msw's postinstall only copies its browser service worker into a configured public
+# directory; the e2e tests use @msw/playwright instead, so no worker ships with the site.
+allowBuilds:
+  msw: false

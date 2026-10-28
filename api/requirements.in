@@ -1,0 +1,20 @@
+# Direct runtime dependencies (exact pins). `requirements.lock` is compiled from this file:
+#   uv pip compile requirements.in --universal --python-version 3.11 --generate-hashes -o requirements.lock
+# The core (`facescan`) is installed from its source with --no-deps; its runtime pins are repeated
+# here from ../requirements.txt so the lock covers both.
+
+# --- facescan core (../requirements.txt)
+mediapipe==1.0.0
+opencv-contrib-python==5.0.0.93
+numpy==2.4.6
+scipy==1.17.1
+PyYAML==6.0.3
+pydantic==2.13.5
+Pillow==12.3.0
+
+# --- API
+fastapi==0.141.1
+uvicorn==0.54.0
+pydantic-settings==2.15.0
+Pebble==5.2.2
+python-multipart==0.0.32

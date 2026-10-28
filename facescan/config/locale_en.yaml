@@ -1,0 +1,240 @@
+# English user-facing text. Wording rules: neutral and informational,
+# never a diagnosis, never "you need…", never words such as defect, flaw,
+# abnormal or ugly; no scores, rankings or comparisons with other people.
+# The clinical team reviews every string before launch.
+locale: en
+language_name: English
+
+reference:
+  canon: "Classical proportion reference"
+  population: "Typical range"
+  note: "Reference ranges describe classical proportions or typical measurements. Faces differ naturally, and values outside a range are common."
+
+side_note: "Right and left refer to your own right and left."
+
+status:
+  within: "Within the reference range"
+  above: "Above the reference range"
+  below: "Below the reference range"
+  inconclusive: "Too close to the reference limit to tell apart from measurement variation"
+  unavailable: "Could not be measured from this photo"
+  no_reference: "Shown for information"
+
+confidence:
+  high: "Measured automatically"
+  low: "Approximate: this point is hard to place automatically"
+
+flags:
+  large_user_adjustment: "You moved this point far from where it was detected, so this value is shown for information only."
+  no_automatic_position: "This point was placed by hand, so this value is approximate."
+  uncertainty_unavailable: "The measurement precision could not be estimated for this value."
+
+units:
+  "%E-line": "% of the nose–chin line"
+  fraction: ""
+  ratio: ""
+  deg: "°"
+  mm: " mm"
+  "%ICD": "% of eye spacing"
+
+hint:
+  profile_background: "Use a plain background that contrasts with your skin and hair."
+  profile_facing: "Turn so that your nose points to the side shown in the app."
+  profile_in_frame: "Keep your whole profile, from forehead to neck, inside the photo, with nothing in front of your face or neck."
+  profile_pose: "Turn exactly sideways, close your lips gently, and keep hair, hands and clothing away from your face outline."
+  profile_level: "Keep your head level and look straight ahead at a point at eye level."
+  face_in_frame: "Make sure your whole face, from hairline to chin, is inside the photo."
+  no_face: "No face was found. Face the camera so your whole face is visible."
+  multiple_faces: "More than one face was found. Only the person being measured should be in the photo."
+  distance_unverified: "The camera distance could not be checked for this photo."
+  move_back: "Move the camera a little farther away (about 1.5 m) and use 2–3× zoom."
+  turn_left: "Turn your head slightly to your left."
+  turn_right: "Turn your head slightly to your right."
+  chin_down: "Lower your chin slightly."
+  chin_up: "Raise your chin slightly."
+  head_level: "Keep your head level, without tilting it."
+  close_mouth: "Close your lips gently."
+  relax_smile: "Relax your face into a neutral expression, without smiling."
+  open_eyes: "Keep your eyes open and look at the lens."
+  relax_brows: "Relax your eyebrows."
+  neutral_expression: "Relax your face into a neutral expression."
+  face_too_small: "Your face is too small in the photo. Zoom in (2–3×) or use a higher-resolution camera instead of moving closer."
+  hold_still: "Hold still and make sure the camera is focused on your face."
+  more_light: "Find brighter, even light on your face."
+  less_light: "Reduce the light on your face or avoid direct light."
+  avoid_glare: "Avoid strong light or deep shadows on your face."
+
+check:
+  background_contrast: "Background contrast"
+  facing: "Facing direction"
+  contour_continuous: "Complete profile outline"
+  profile_points: "Profile points found"
+  pronasale_most_anterior: "Nose tip position"
+  landmark_order: "Profile outline shape"
+  head_tilt_deg: "Head level"
+  face_in_frame: "Whole face in the photo"
+  face_count: "One face in the photo"
+  camera_distance_m: "Camera distance"
+  yaw_deg: "Head turned left or right"
+  pitch_deg: "Chin up or down"
+  roll_deg: "Head tilt"
+  expression_jawOpen: "Lips closed"
+  expression_mouthSmileLeft: "Neutral mouth"
+  expression_mouthSmileRight: "Neutral mouth"
+  expression_eyeBlinkLeft: "Eyes open"
+  expression_eyeBlinkRight: "Eyes open"
+  expression_browInnerUp: "Relaxed eyebrows"
+  ipd_px: "Face size in the photo"
+  sharpness: "Sharpness"
+  exposure_mean: "Brightness"
+  exposure_clipped_frac: "Glare and shadows"
+  burst_good_frames: "Usable frames"
+
+warning:
+  no_frontal_scale: "Millimetre values need the front photo from the same session, so only proportions are shown."
+  distance_unverified: "The camera distance could not be verified, so these measurements are shown for information only."
+
+disclaimer:
+  general: "This app shows measurements of facial proportions for information only. It is not a medical diagnosis or a treatment recommendation. Measurements depend on the photo and have limited precision, and proportions differ naturally between people. If you are considering any procedure, please consult a licensed plastic surgeon in person."
+  consult: "Please consult a licensed plastic surgeon in person before making any decision."
+
+area:
+  nose: "Nose"
+  lips: "Lips"
+  mouth: "Mouth"
+  eyes: "Eyes"
+  brows: "Eyebrows"
+  forehead: "Forehead"
+  chin: "Chin"
+  profile: "Side profile"
+  thirds: "Vertical proportions"
+  lower_face: "Lower face"
+  fifths: "Horizontal proportions"
+  proportions: "Facial proportions"
+  symmetry: "Left–right symmetry"
+
+severity:
+  info: "For your information"
+  discuss: "A topic you may want to discuss"
+
+consideration_none: "No discussion topics were generated from this scan. This does not replace an in-person consultation."
+
+consideration_intro: "Features you may want to discuss with a licensed plastic surgeon"
+
+capture:
+  frontal:
+    title: "How to take the front photo"
+    steps:
+      - "Ask a helper to take the photo with the rear camera from about 1.5 m using 2–3× zoom, or put the phone on a stand at eye level and use the timer or voice control."
+      - "Please do not take an arm's-length selfie: at short distances the nose and mid-face look larger than they are."
+      - "Stand in front of a plain, light background with even light on your face."
+      - "Pull your hair back so your hairline and temples are visible, and take off glasses."
+      - "Keep your head level and look straight at the lens."
+      - "Relax your face: neutral expression, lips gently closed."
+  profile:
+    title: "How to take the side photo"
+    steps:
+      - "Turn exactly sideways to the camera (90°), taken the same way as the front photo."
+      - "Use a plain background that contrasts with your skin and hair."
+      - "Tuck your hair behind your ear and keep the camera level."
+      - "Look straight ahead at a point at eye level."
+      - "Keep your chin and some of your neck visible, with your collar below your chin and nothing in front of your face or neck."
+
+point:
+  trichion:
+    name: "Hairline"
+    instruction: "Drag the point to where your hairline meets your forehead, in the middle of your face."
+  glabella: {name: "Forehead between the eyebrows", instruction: "Slide the point along the outline to the most forward point between your eyebrows."}
+  nasion: {name: "Top of the nose", instruction: "Slide the point to the deepest point between your forehead and nose."}
+  pronasale: {name: "Nose tip", instruction: "Slide the point to the most forward point of your nose."}
+  subnasale: {name: "Base of the nose", instruction: "Slide the point to where the base of your nose meets your upper lip."}
+  labrale_superius: {name: "Upper lip", instruction: "Slide the point to the most forward point of your upper lip."}
+  labrale_inferius: {name: "Lower lip", instruction: "Slide the point to the most forward point of your lower lip."}
+  soft_tissue_pogonion: {name: "Chin", instruction: "Slide the point to the most forward point of your chin."}
+  menton: {name: "Bottom of the chin", instruction: "Slide the point to the lowest point of your chin."}
+  alar_crease: {name: "Side of the nose", instruction: "Place the point where the side of your nose meets your cheek."}
+
+metric:
+  P1_nasofrontal_angle: {name: "Forehead–nose angle", short: "Forehead–nose", description: "Angle between the forehead and the bridge of the nose, measured at the top of the nose."}
+  P2_nasolabial_angle: {name: "Nose–upper lip angle", short: "Nose–lip", description: "Angle between the underside of the nose and the upper lip."}
+  P3a_tip_projection_goode: {name: "Nose tip projection (Goode)", short: "Tip projection", description: "How far the nose tip projects from the side of the nose, compared with the length of the nose. Uses the point you placed at the side of the nose."}
+  P3b_tip_projection_simons: {name: "Nose tip projection (Simons)", short: "Tip : lip", description: "Length from the base of the nose to the tip, compared with the height of the upper lip (additional information)."}
+  P4_eline_upper_lip_mm: {name: "Upper lip and the nose–chin line (mm)", short: "Upper lip", description: "Distance of the upper lip from a line drawn from the nose tip to the chin. Negative means behind the line."}
+  P4_eline_lower_lip_mm: {name: "Lower lip and the nose–chin line (mm)", short: "Lower lip", description: "Distance of the lower lip from a line drawn from the nose tip to the chin. Negative means behind the line."}
+  P4_eline_upper_lip_pct: {name: "Upper lip and the nose–chin line", short: "Upper lip", description: "Distance of the upper lip from a line drawn from the nose tip to the chin, as a share of that line. Negative means behind the line."}
+  P4_eline_lower_lip_pct: {name: "Lower lip and the nose–chin line", short: "Lower lip", description: "Distance of the lower lip from a line drawn from the nose tip to the chin, as a share of that line. Negative means behind the line."}
+  P5_forehead_inclination: {name: "Forehead slope", short: "Forehead", description: "Angle of the forehead from vertical, from the point between the eyebrows to the hairline. Positive means the forehead slopes back."}
+  F1_upper_third: {name: "Upper third of the face", short: "Upper", description: "Hairline to the point between the eyebrows, as a share of face height."}
+  F1_middle_third: {name: "Middle third of the face", short: "Middle", description: "Point between the eyebrows to the base of the nose, as a share of face height."}
+  F1_lower_third: {name: "Lower third of the face", short: "Lower", description: "Base of the nose to the bottom of the chin, as a share of face height."}
+  F1_middle_lower_ratio: {name: "Middle-to-lower face ratio", short: "Middle : lower", description: "Height of the middle third compared with the lower third."}
+  F2_lower_face_ratio: {name: "Upper lip to chin ratio", short: "Lip : chin", description: "Base of the nose to the lip line, compared with the lip line to the bottom of the chin."}
+  F3_fifth_outer_right: {name: "Outer face width, right", short: "Outer R", description: "Side of the face to the outer corner of the right eye, as a share of face width."}
+  F3_fifth_eye_right: {name: "Right eye, share of face width", short: "Eye R", description: "Width of the right eye as a share of face width."}
+  F3_fifth_intercanthal: {name: "Eye spacing, share of face width", short: "Between eyes", description: "Distance between the inner eye corners as a share of face width."}
+  F3_fifth_eye_left: {name: "Left eye, share of face width", short: "Eye L", description: "Width of the left eye as a share of face width."}
+  F3_fifth_outer_left: {name: "Outer face width, left", short: "Outer L", description: "Outer corner of the left eye to the side of the face, as a share of face width."}
+  F4_eye_icd_ratio_right: {name: "Right eye width vs eye spacing", short: "Eye R", description: "Width of the right eye compared with the distance between the inner eye corners."}
+  F4_eye_icd_ratio_left: {name: "Left eye width vs eye spacing", short: "Eye L", description: "Width of the left eye compared with the distance between the inner eye corners."}
+  F4_icd_mm: {name: "Eye spacing", short: "Eye spacing", description: "Distance between the inner eye corners."}
+  F5_canthal_tilt_right: {name: "Right eye tilt", short: "Tilt R", description: "Angle of the line from the inner to the outer eye corner. Positive means the outer corner is higher."}
+  F5_canthal_tilt_left: {name: "Left eye tilt", short: "Tilt L", description: "Angle of the line from the inner to the outer eye corner. Positive means the outer corner is higher."}
+  F6_alar_icd_ratio: {name: "Nose width vs eye spacing", short: "Nose width", description: "Width of the nose at the nostrils compared with the distance between the inner eye corners."}
+  F7_commissure_offset_right_pct_icd: {name: "Right mouth corner position", short: "Mouth R", description: "Sideways distance of the mouth corner from a vertical line through the inner edge of the iris. Positive means farther out."}
+  F7_commissure_offset_left_pct_icd: {name: "Left mouth corner position", short: "Mouth L", description: "Sideways distance of the mouth corner from a vertical line through the inner edge of the iris. Positive means farther out."}
+  F7_commissure_offset_right_mm: {name: "Right mouth corner position (mm)", short: "Mouth R", description: "Sideways distance of the mouth corner from a vertical line through the inner edge of the iris. Positive means farther out."}
+  F7_commissure_offset_left_mm: {name: "Left mouth corner position (mm)", short: "Mouth L", description: "Sideways distance of the mouth corner from a vertical line through the inner edge of the iris. Positive means farther out."}
+  F7_mouth_alar_ratio: {name: "Mouth width vs nose width", short: "Mouth : nose", description: "Mouth width compared with nose width (additional information)."}
+  F7_mouth_ipd_ratio: {name: "Mouth width vs pupil distance", short: "Mouth : pupils", description: "Mouth width compared with the distance between the pupils (additional information)."}
+  F8_lip_ratio: {name: "Lower-to-upper lip ratio", short: "Lips", description: "Height of the lower lip compared with the upper lip, lips closed."}
+  F9_brow_head_offset_right_pct_icd: {name: "Start of the right eyebrow", short: "Brow start R", description: "Sideways distance of the inner end of the eyebrow from a vertical line through the side of the nose."}
+  F9_brow_head_offset_left_pct_icd: {name: "Start of the left eyebrow", short: "Brow start L", description: "Sideways distance of the inner end of the eyebrow from a vertical line through the side of the nose."}
+  F9_brow_head_offset_right_mm: {name: "Start of the right eyebrow (mm)", short: "Brow start R", description: "Sideways distance of the inner end of the eyebrow from a vertical line through the side of the nose."}
+  F9_brow_head_offset_left_mm: {name: "Start of the left eyebrow (mm)", short: "Brow start L", description: "Sideways distance of the inner end of the eyebrow from a vertical line through the side of the nose."}
+  F9_brow_apex_offset_right_pct_icd: {name: "Highest point of the right eyebrow", short: "Brow peak R", description: "Sideways distance of the eyebrow's highest point from a vertical line through the outer edge of the iris."}
+  F9_brow_apex_offset_left_pct_icd: {name: "Highest point of the left eyebrow", short: "Brow peak L", description: "Sideways distance of the eyebrow's highest point from a vertical line through the outer edge of the iris."}
+  F9_brow_apex_offset_right_mm: {name: "Highest point of the right eyebrow (mm)", short: "Brow peak R", description: "Sideways distance of the eyebrow's highest point from a vertical line through the outer edge of the iris."}
+  F9_brow_apex_offset_left_mm: {name: "Highest point of the left eyebrow (mm)", short: "Brow peak L", description: "Sideways distance of the eyebrow's highest point from a vertical line through the outer edge of the iris."}
+  F9_brow_apex_ratio_right: {name: "Right eyebrow arch position", short: "Arch R", description: "Length of the inner part of the eyebrow (up to its highest point) compared with the outer part."}
+  F9_brow_apex_ratio_left: {name: "Left eyebrow arch position", short: "Arch L", description: "Length of the inner part of the eyebrow (up to its highest point) compared with the outer part."}
+  F9_brow_tail_offset_right_pct_icd: {name: "End of the right eyebrow", short: "Brow end R", description: "Distance of the eyebrow's outer end from a line drawn from the side of the nose through the outer eye corner."}
+  F9_brow_tail_offset_left_pct_icd: {name: "End of the left eyebrow", short: "Brow end L", description: "Distance of the eyebrow's outer end from a line drawn from the side of the nose through the outer eye corner."}
+  F9_brow_tail_offset_right_mm: {name: "End of the right eyebrow (mm)", short: "Brow end R", description: "Distance of the eyebrow's outer end from a line drawn from the side of the nose through the outer eye corner."}
+  F9_brow_tail_offset_left_mm: {name: "End of the left eyebrow (mm)", short: "Brow end L", description: "Distance of the eyebrow's outer end from a line drawn from the side of the nose through the outer eye corner."}
+  F11_asym_eye_width: {name: "Left–right difference: eye width", short: "Eye width L–R", description: "Difference between the two sides. Small differences are natural."}
+  F11_asym_outer_fifth: {name: "Left–right difference: outer face", short: "Outer face L–R", description: "Difference between the two sides. Small differences are natural."}
+  F11_asym_brow_apex_ratio: {name: "Left–right difference: eyebrow arch", short: "Arch L–R", description: "Difference between the two sides. Small differences are natural."}
+  F11_asym_canthal_tilt: {name: "Left–right difference: eye tilt", short: "Tilt L–R", description: "Difference between the two sides. Small differences are natural."}
+  F11_asym_commissure_offset: {name: "Left–right difference: mouth corners", short: "Mouth L–R", description: "Difference between the two sides. Small differences are natural."}
+  F11_asym_brow_head_offset: {name: "Left–right difference: eyebrow start", short: "Brow start L–R", description: "Difference between the two sides. Small differences are natural."}
+  F11_asym_brow_apex_offset: {name: "Left–right difference: eyebrow highest point", short: "Brow peak L–R", description: "Difference between the two sides. Small differences are natural."}
+  F11_asym_brow_tail_offset: {name: "Left–right difference: eyebrow end", short: "Brow end L–R", description: "Difference between the two sides. Small differences are natural."}
+
+overlay:
+  legend_title: "Legend"
+  auto_point: "Detected point"
+  low_confidence_point: "Approximate point"
+  adjusted_point: "Adjusted point"
+  outside_reference: "Outside the reference range"
+  measured: "Measurement line"
+  within: "Within"
+  above_below: "Above / below"
+  inconclusive: "Inconclusive"
+  unavailable: "Unavailable"
+
+# Phase 3 example keys (used only by rules.example.yaml, never by real rules).
+finding:
+  example_nasolabial_below: "The angle between the nose and the upper lip measured below the reference range."
+  example_lips_ahead_of_eline: "The lips measured in front of the reference line from the nose tip to the chin."
+  example_alar_width_above: "The nose width measured above the reference range relative to eye spacing."
+consideration:
+  example_nasal_tip: "Nasal tip shape and rotation"
+  example_nasal_projection: "Nasal projection"
+  example_chin_projection: "Chin projection"
+  example_dental_assessment: "Teeth and jaw alignment, which a dentist can assess"
+  example_alar_base: "Nostril and nose base width"
+
+# Clinic export and QA only; never shown in the consumer app.
+clinical:
+  metric:
+    F10_golden_ratio: {name: "Golden ratio (face height ÷ bizygomatic width)", short: "Golden ratio"}

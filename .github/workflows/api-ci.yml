@@ -1,0 +1,20 @@
+# Runs api/scripts/ci.sh (tests, OpenAPI contract) on Python 3.11.
+name: api-ci
+on:
+  push:
+  pull_request:
+jobs:
+  ci:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: System libraries (OpenCV, MediaPipe, RAQM)
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libgl1 libglib2.0-0 libx11-6 libxext6 libxcb1 libsm6 libice6 libfribidi0
+      - name: CI
+        run: |
+          python -m venv .venv-ci
+          . .venv-ci/bin/activate
+          api/scripts/ci.sh

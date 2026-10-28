@@ -1,0 +1,22 @@
+# Acceptance targets for `python -m facescan.tools.evaluate`.
+#
+# ALL VALUES ARE PLACEHOLDERS (null) FOR THE CLINICAL TEAM. `evaluate` reports
+# "no target" for null values; it never invents a pass / fail threshold.
+version: "1"
+
+landmarks:
+  default:
+    max_mean_error_mm: null      # TODO clinical
+  # per-point overrides, e.g.
+  # trichion: {max_mean_error_mm: null}
+
+metrics:
+  default:
+    max_abs_mean_diff: null      # |mean(auto − clinician)|, in the metric's unit
+    max_loa_half_width: null     # 1.96 × SD of the differences (Bland–Altman)
+    min_icc: null                # test–retest ICC(1,1) across repeated captures
+  # per-metric overrides, e.g.
+  # F5_canthal_tilt_right: {max_abs_mean_diff: null, max_loa_half_width: null, min_icc: null}
+
+gates:
+  max_rejection_rate: null       # per capture condition (consumer phone, controlled…)

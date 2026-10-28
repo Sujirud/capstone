@@ -1,0 +1,2187 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Facial Analysis API",
+    "description": "HTTP service around the `facescan` core. Stateless: results travel back to the client in result tokens (compressed JSON) that later calls send back. Frontal and profile analysis, adjustments, overlays, and reports with considerations from the rules file. Errors are RFC 9457 problem details with a stable `code`.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/readyz": {
+      "get": {
+        "summary": "Readiness",
+        "description": "Ready once every worker has created its engine and run the warm-up analysis, and RAQM (Thai text in overlays) is available.",
+        "operationId": "readyz_readyz_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadyResponse"
+                },
+                "example": {
+                  "status": "ready",
+                  "workers": 4
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable: `not_ready`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Service Unavailable",
+                  "status": 503,
+                  "detail": "…",
+                  "code": "not_ready",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/client-config": {
+      "get": {
+        "summary": "Capture thresholds, limits and strings",
+        "description": "`engine.client_config(locale)` plus upload limits, overlay layers, the rules version and versions. Cacheable (`ETag`, 1 h).",
+        "operationId": "client_config_v1_client_config_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientConfigResponse"
+                },
+                "example": {
+                  "config_hash": "3f9a…",
+                  "core_version": "0.1.0",
+                  "frontal": {
+                    "burst": {
+                      "max_frames": 15,
+                      "min_frames": 3,
+                      "recommended_frames": 7
+                    },
+                    "gates": {
+                      "…": "…"
+                    }
+                  },
+                  "locale": "th",
+                  "overlay": {
+                    "layers": [
+                      "landmarks",
+                      "thirds",
+                      "fifths"
+                    ],
+                    "max_side_px": 1600
+                  },
+                  "profile": {
+                    "gates": {
+                      "…": "…"
+                    }
+                  },
+                  "rules_version": "EXAMPLE",
+                  "schema_version": "2.0",
+                  "strings": {
+                    "hint": {
+                      "…": "…"
+                    }
+                  },
+                  "upload_limits": {
+                    "accepted_types": [
+                      "image/jpeg",
+                      "image/png",
+                      "image/webp"
+                    ],
+                    "max_burst_pixels": 125000000,
+                    "max_frames": 15,
+                    "max_image_bytes": 12000000,
+                    "max_pixels": 24000000,
+                    "max_request_bytes": 60000000
+                  },
+                  "user_adjustable_points": {
+                    "frontal": [
+                      "trichion"
+                    ],
+                    "profile": [
+                      "…"
+                    ]
+                  },
+                  "versions": {
+                    "api": "0.1.0",
+                    "core": "0.1.0",
+                    "schema": "2.0"
+                  }
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified (If-None-Match matched the ETag)"
+          },
+          "400": {
+            "description": "Bad Request: `invalid_request`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "…",
+                  "code": "invalid_request",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests: `rate_limited`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Too Many Requests",
+                  "status": 429,
+                  "detail": "…",
+                  "code": "rate_limited",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable: `not_ready`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Service Unavailable",
+                  "status": 503,
+                  "detail": "…",
+                  "code": "not_ready",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "th",
+                "en"
+              ],
+              "default": "th"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/frontal/analyze": {
+      "post": {
+        "summary": "Analyze a frontal photo or burst",
+        "description": "One photo, or a burst of 3–15 frames of identical size in capture order. Capture outcomes (`no_face`, `multiple_faces`, `quality_failed`) are 200 responses with hints and no token.",
+        "operationId": "frontal_analyze_v1_frontal_analyze_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "frames": {
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "type": "array",
+                    "maxItems": 15,
+                    "minItems": 1,
+                    "description": "JPEG, PNG or WebP as captured: no resizing, cropping or re-encoding."
+                  },
+                  "meta": {
+                    "$ref": "#/components/schemas/FrontalAnalyzeMeta"
+                  }
+                },
+                "type": "object",
+                "required": [
+                  "frames",
+                  "meta"
+                ]
+              },
+              "example": {
+                "frames": [
+                  "<frame-1.jpg>",
+                  "<frame-2.jpg>",
+                  "<frame-3.jpg>"
+                ],
+                "meta": {
+                  "camera": {
+                    "focal_px": 2890.0,
+                    "source": "device"
+                  },
+                  "locale": "th",
+                  "overlay": {
+                    "layers": [
+                      "landmarks",
+                      "thirds",
+                      "fifths"
+                    ]
+                  },
+                  "subject": {
+                    "age": 28,
+                    "sex": "female"
+                  }
+                }
+              },
+              "encoding": {
+                "meta": {
+                  "contentType": "application/json"
+                },
+                "frames": {
+                  "contentType": "image/jpeg, image/png, image/webp"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyzeResponse"
+                },
+                "example": {
+                  "failed_checks": [],
+                  "hints": [],
+                  "overlay": "data:image/jpeg;base64,/9j/…",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3",
+                  "result": {
+                    "metrics": {
+                      "…": "…"
+                    },
+                    "status": "ok",
+                    "view": "frontal"
+                  },
+                  "result_token": "eJy…",
+                  "status": "ok",
+                  "versions": {
+                    "api": "0.1.0",
+                    "core": "0.1.0",
+                    "schema": "2.0"
+                  },
+                  "warnings": [
+                    "distance_unverified"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request: `invalid_request`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "…",
+                  "code": "invalid_request",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Content Too Large: `payload_too_large`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Content Too Large",
+                  "status": 413,
+                  "detail": "…",
+                  "code": "payload_too_large",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type: `unsupported_media_type`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unsupported Media Type",
+                  "status": 415,
+                  "detail": "…",
+                  "code": "unsupported_media_type",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content: `invalid_meta`, `too_many_pixels`, `frame_size_mismatch`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unprocessable Content",
+                  "status": 422,
+                  "detail": "…",
+                  "code": "invalid_meta",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests: `rate_limited`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Too Many Requests",
+                  "status": 429,
+                  "detail": "…",
+                  "code": "rate_limited",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error: `internal_error`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Internal Server Error",
+                  "status": 500,
+                  "detail": "…",
+                  "code": "internal_error",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable: `not_ready`, `overloaded`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Service Unavailable",
+                  "status": 503,
+                  "detail": "…",
+                  "code": "not_ready",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout: `analysis_timeout`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Gateway Timeout",
+                  "status": 504,
+                  "detail": "…",
+                  "code": "analysis_timeout",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/adjust": {
+      "post": {
+        "summary": "Apply point adjustments to a result",
+        "description": "Recomputes a token's result with moved points, without the image. Every override is recorded as a user adjustment; only `user_adjustable_points` of the token's view may move. Profile silhouette points are re-snapped to the stored contour by the core, whatever coordinates were sent. Returns a new token (same session) and no overlay.",
+        "operationId": "adjust_v1_adjust_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdjustRequest"
+              },
+              "example": {
+                "locale": "th",
+                "overrides": {
+                  "trichion": {
+                    "x": 1012.5,
+                    "y": 388.0
+                  }
+                },
+                "result_token": "eJy…"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyzeResponse"
+                },
+                "example": {
+                  "failed_checks": [],
+                  "hints": [],
+                  "overlay": "data:image/jpeg;base64,/9j/…",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3",
+                  "result": {
+                    "metrics": {
+                      "…": "…"
+                    },
+                    "status": "ok",
+                    "view": "frontal"
+                  },
+                  "result_token": "eJy…",
+                  "status": "ok",
+                  "versions": {
+                    "api": "0.1.0",
+                    "core": "0.1.0",
+                    "schema": "2.0"
+                  },
+                  "warnings": [
+                    "distance_unverified"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request: `invalid_request`, `token_invalid`, `token_stale`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "…",
+                  "code": "invalid_request",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Content Too Large: `payload_too_large`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Content Too Large",
+                  "status": 413,
+                  "detail": "…",
+                  "code": "payload_too_large",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type: `unsupported_media_type`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unsupported Media Type",
+                  "status": 415,
+                  "detail": "…",
+                  "code": "unsupported_media_type",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content: `point_not_adjustable`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unprocessable Content",
+                  "status": 422,
+                  "detail": "…",
+                  "code": "point_not_adjustable",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests: `rate_limited`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Too Many Requests",
+                  "status": 429,
+                  "detail": "…",
+                  "code": "rate_limited",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error: `internal_error`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Internal Server Error",
+                  "status": 500,
+                  "detail": "…",
+                  "code": "internal_error",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable: `not_ready`, `overloaded`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Service Unavailable",
+                  "status": 503,
+                  "detail": "…",
+                  "code": "not_ready",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout: `analysis_timeout`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Gateway Timeout",
+                  "status": 504,
+                  "detail": "…",
+                  "code": "analysis_timeout",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/overlay": {
+      "post": {
+        "summary": "Draw an overlay for a result",
+        "description": "Redraws a token's result on its reference image (the reference frame or photo exactly as uploaded, or the profile photo) after adjustments. JPEG, long side ≤ OVERLAY_MAX_SIDE, no EXIF.",
+        "operationId": "overlay_v1_overlay_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The result's reference image as originally uploaded."
+                  },
+                  "meta": {
+                    "$ref": "#/components/schemas/OverlayMeta"
+                  }
+                },
+                "type": "object",
+                "required": [
+                  "image",
+                  "meta"
+                ]
+              },
+              "example": {
+                "image": "<frame-2.jpg>",
+                "meta": {
+                  "layers": [
+                    "landmarks",
+                    "thirds",
+                    "fifths"
+                  ],
+                  "locale": "th",
+                  "result_token": "eJy…"
+                }
+              },
+              "encoding": {
+                "meta": {
+                  "contentType": "application/json"
+                },
+                "image": {
+                  "contentType": "image/jpeg, image/png, image/webp"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The overlay",
+            "content": {
+              "image/jpeg": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request: `invalid_request`, `token_invalid`, `token_stale`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "…",
+                  "code": "invalid_request",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Content Too Large: `payload_too_large`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Content Too Large",
+                  "status": 413,
+                  "detail": "…",
+                  "code": "payload_too_large",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type: `unsupported_media_type`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unsupported Media Type",
+                  "status": 415,
+                  "detail": "…",
+                  "code": "unsupported_media_type",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content: `invalid_meta`, `too_many_pixels`, `image_mismatch`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unprocessable Content",
+                  "status": 422,
+                  "detail": "…",
+                  "code": "invalid_meta",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests: `rate_limited`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Too Many Requests",
+                  "status": 429,
+                  "detail": "…",
+                  "code": "rate_limited",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error: `internal_error`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Internal Server Error",
+                  "status": 500,
+                  "detail": "…",
+                  "code": "internal_error",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable: `not_ready`, `overloaded`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Service Unavailable",
+                  "status": 503,
+                  "detail": "…",
+                  "code": "not_ready",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout: `analysis_timeout`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Gateway Timeout",
+                  "status": 504,
+                  "detail": "…",
+                  "code": "analysis_timeout",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/profile/analyze": {
+      "post": {
+        "summary": "Analyze a profile photo",
+        "description": "A true 90° profile photo; `facing` is the direction the nose points in the image. With a `frontal_token` (from `/v1/frontal/analyze` or `/v1/adjust` of the same session) the subject and `session_id` come from it (a different `subject` in `meta` → 400 `subject_mismatch`) and mm values use its scale. Without one, `subject` is required, a new session starts and mm values are unavailable (warning `no_frontal_scale`). The result includes the silhouette `contour` and the points the user may adjust. Capture outcomes (`no_face`, `multiple_faces`, `contour_failed`, `quality_failed`) are 200 responses with hints and no token.",
+        "operationId": "profile_analyze_v1_profile_analyze_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "JPEG, PNG or WebP as captured."
+                  },
+                  "meta": {
+                    "$ref": "#/components/schemas/ProfileAnalyzeMeta"
+                  }
+                },
+                "type": "object",
+                "required": [
+                  "image",
+                  "meta"
+                ]
+              },
+              "example": {
+                "image": "<profile.jpg>",
+                "meta": {
+                  "camera": {
+                    "focal_px": 2890.0,
+                    "source": "device"
+                  },
+                  "facing": "left",
+                  "frontal_token": "eJy…",
+                  "locale": "th",
+                  "overlay": {
+                    "layers": [
+                      "landmarks",
+                      "profile_lines"
+                    ]
+                  }
+                }
+              },
+              "encoding": {
+                "meta": {
+                  "contentType": "application/json"
+                },
+                "image": {
+                  "contentType": "image/jpeg, image/png, image/webp"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyzeResponse"
+                },
+                "example": {
+                  "failed_checks": [],
+                  "hints": [],
+                  "overlay": "data:image/jpeg;base64,/9j/…",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3",
+                  "result": {
+                    "metrics": {
+                      "…": "…"
+                    },
+                    "status": "ok",
+                    "view": "frontal"
+                  },
+                  "result_token": "eJy…",
+                  "status": "ok",
+                  "versions": {
+                    "api": "0.1.0",
+                    "core": "0.1.0",
+                    "schema": "2.0"
+                  },
+                  "warnings": [
+                    "distance_unverified"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request: `invalid_request`, `subject_mismatch`, `token_invalid`, `token_stale`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "…",
+                  "code": "invalid_request",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Content Too Large: `payload_too_large`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Content Too Large",
+                  "status": 413,
+                  "detail": "…",
+                  "code": "payload_too_large",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type: `unsupported_media_type`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unsupported Media Type",
+                  "status": 415,
+                  "detail": "…",
+                  "code": "unsupported_media_type",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content: `invalid_meta`, `too_many_pixels`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unprocessable Content",
+                  "status": 422,
+                  "detail": "…",
+                  "code": "invalid_meta",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests: `rate_limited`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Too Many Requests",
+                  "status": 429,
+                  "detail": "…",
+                  "code": "rate_limited",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error: `internal_error`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Internal Server Error",
+                  "status": 500,
+                  "detail": "…",
+                  "code": "internal_error",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable: `not_ready`, `overloaded`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Service Unavailable",
+                  "status": 503,
+                  "detail": "…",
+                  "code": "not_ready",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout: `analysis_timeout`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Gateway Timeout",
+                  "status": 504,
+                  "detail": "…",
+                  "code": "analysis_timeout",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/report": {
+      "post": {
+        "summary": "Build the report with considerations",
+        "description": "Combines the session's frontal result and, optionally, its profile result into the report with considerations from the rules file. Both tokens must share a `session_id` (otherwise 400 `session_mismatch`). The response is `user_view(report)`: each consideration with its triggering measurements and reference range, the advice to consult a licensed surgeon, and the disclaimer. No token is returned.",
+        "operationId": "report_v1_report_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportRequest"
+              },
+              "example": {
+                "frontal_token": "eJy…",
+                "locale": "th",
+                "profile_token": "eJy…"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResponse"
+                },
+                "example": {
+                  "report": {
+                    "consideration_intro": "Features you may want to discuss with a licensed plastic surgeon",
+                    "considerations": [
+                      {
+                        "area": "nose",
+                        "area_text": "Nose",
+                        "considerations": [
+                          "…"
+                        ],
+                        "consult": "Please consult a licensed plastic surgeon in person before making any decision.",
+                        "finding": "…",
+                        "measurements": [
+                          {
+                            "id": "P2_nasolabial_angle",
+                            "name": "…",
+                            "reference": {
+                              "basis": "canon",
+                              "max": 105.0,
+                              "min": 95.0,
+                              "text": "95.0° – 105.0°"
+                            },
+                            "status": "below",
+                            "status_text": "…",
+                            "value_text": "84.2°"
+                          }
+                        ],
+                        "rule_id": "EXAMPLE-01",
+                        "severity": "info",
+                        "severity_text": "…"
+                      }
+                    ],
+                    "disclaimer": "…",
+                    "frontal": {
+                      "view": "frontal",
+                      "…": "…"
+                    },
+                    "locale": "en",
+                    "profile": {
+                      "view": "profile",
+                      "…": "…"
+                    },
+                    "rules_version": "EXAMPLE",
+                    "status": "ok"
+                  },
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3",
+                  "status": "ok",
+                  "versions": {
+                    "api": "0.1.0",
+                    "core": "0.1.0",
+                    "schema": "2.0"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request: `invalid_request`, `subject_mismatch`, `session_mismatch`, `token_invalid`, `token_stale`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Bad Request",
+                  "status": 400,
+                  "detail": "…",
+                  "code": "invalid_request",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Content Too Large: `payload_too_large`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Content Too Large",
+                  "status": 413,
+                  "detail": "…",
+                  "code": "payload_too_large",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type: `unsupported_media_type`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Unsupported Media Type",
+                  "status": 415,
+                  "detail": "…",
+                  "code": "unsupported_media_type",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests: `rate_limited`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Too Many Requests",
+                  "status": 429,
+                  "detail": "…",
+                  "code": "rate_limited",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error: `internal_error`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Internal Server Error",
+                  "status": 500,
+                  "detail": "…",
+                  "code": "internal_error",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable: `not_ready`, `overloaded`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Service Unavailable",
+                  "status": 503,
+                  "detail": "…",
+                  "code": "not_ready",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout: `analysis_timeout`",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                },
+                "example": {
+                  "type": "about:blank",
+                  "title": "Gateway Timeout",
+                  "status": 504,
+                  "detail": "…",
+                  "code": "analysis_timeout",
+                  "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AdjustRequest": {
+        "additionalProperties": false,
+        "description": "Point overrides in pixels of the analyzed image; the API records each as a user adjustment.",
+        "examples": [
+          {
+            "locale": "th",
+            "overrides": {
+              "trichion": {
+                "x": 1012.5,
+                "y": 388.0
+              }
+            },
+            "result_token": "eJy…"
+          }
+        ],
+        "properties": {
+          "result_token": {
+            "maxLength": 524288,
+            "minLength": 1,
+            "title": "Result Token",
+            "type": "string"
+          },
+          "overrides": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/PointIn"
+            },
+            "maxProperties": 32,
+            "minProperties": 1,
+            "propertyNames": {
+              "maxLength": 64,
+              "minLength": 1
+            },
+            "title": "Overrides",
+            "type": "object"
+          },
+          "locale": {
+            "default": "th",
+            "enum": [
+              "th",
+              "en"
+            ],
+            "title": "Locale",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result_token",
+          "overrides"
+        ],
+        "title": "AdjustRequest",
+        "type": "object"
+      },
+      "AnalyzeResponse": {
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "no_face",
+              "multiple_faces",
+              "quality_failed",
+              "contour_failed"
+            ],
+            "title": "Status"
+          },
+          "failed_checks": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Failed Checks",
+            "description": "Ids of the quality checks that failed (empty when ok)."
+          },
+          "hints": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Hints",
+            "description": "The core's localized capture hints."
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings",
+            "description": "Non-blocking notes, e.g. distance_unverified, no_frontal_scale."
+          },
+          "result": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result",
+            "description": "The core's user_view; present only when status is ok."
+          },
+          "result_token": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result Token",
+            "description": "Present only when status is ok. Opaque."
+          },
+          "overlay": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Overlay",
+            "description": "The requested overlay as a data:image/jpeg;base64 URI (status ok only)."
+          },
+          "versions": {
+            "$ref": "#/components/schemas/Versions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "request_id",
+          "status",
+          "failed_checks",
+          "hints",
+          "warnings",
+          "versions"
+        ],
+        "title": "AnalyzeResponse",
+        "description": "Analyze and adjust responses. ``status`` passes through from the core.",
+        "examples": [
+          {
+            "failed_checks": [],
+            "hints": [],
+            "overlay": "data:image/jpeg;base64,/9j/…",
+            "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3",
+            "result": {
+              "metrics": {
+                "…": "…"
+              },
+              "status": "ok",
+              "view": "frontal"
+            },
+            "result_token": "eJy…",
+            "status": "ok",
+            "versions": {
+              "api": "0.1.0",
+              "core": "0.1.0",
+              "schema": "2.0"
+            },
+            "warnings": [
+              "distance_unverified"
+            ]
+          }
+        ]
+      },
+      "CameraIn": {
+        "additionalProperties": false,
+        "description": "Intrinsics of the image exactly as uploaded (after EXIF orientation). Wins over EXIF.",
+        "properties": {
+          "focal_px": {
+            "exclusiveMinimum": 0,
+            "title": "Focal Px",
+            "type": "number"
+          },
+          "source": {
+            "enum": [
+              "device",
+              "exif",
+              "configured_fov",
+              "calibration"
+            ],
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "focal_px",
+          "source"
+        ],
+        "title": "CameraIn",
+        "type": "object"
+      },
+      "ClientConfigResponse": {
+        "properties": {
+          "core_version": {
+            "type": "string",
+            "title": "Core Version"
+          },
+          "schema_version": {
+            "type": "string",
+            "title": "Schema Version"
+          },
+          "config_hash": {
+            "type": "string",
+            "title": "Config Hash"
+          },
+          "locale": {
+            "type": "string",
+            "enum": [
+              "th",
+              "en"
+            ],
+            "title": "Locale"
+          },
+          "upload_limits": {
+            "$ref": "#/components/schemas/UploadLimits"
+          },
+          "overlay": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Overlay"
+          },
+          "rules_version": {
+            "type": "string",
+            "title": "Rules Version",
+            "description": "The loaded rules file's version."
+          },
+          "versions": {
+            "$ref": "#/components/schemas/Versions"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "core_version",
+          "schema_version",
+          "config_hash",
+          "locale",
+          "upload_limits",
+          "overlay",
+          "rules_version",
+          "versions"
+        ],
+        "title": "ClientConfigResponse",
+        "description": "``engine.client_config(locale)`` (gates, burst, adjustable points, strings) plus the API's limits.",
+        "examples": [
+          {
+            "config_hash": "3f9a…",
+            "core_version": "0.1.0",
+            "frontal": {
+              "burst": {
+                "max_frames": 15,
+                "min_frames": 3,
+                "recommended_frames": 7
+              },
+              "gates": {
+                "…": "…"
+              }
+            },
+            "locale": "th",
+            "overlay": {
+              "layers": [
+                "landmarks",
+                "thirds",
+                "fifths"
+              ],
+              "max_side_px": 1600
+            },
+            "profile": {
+              "gates": {
+                "…": "…"
+              }
+            },
+            "rules_version": "EXAMPLE",
+            "schema_version": "2.0",
+            "strings": {
+              "hint": {
+                "…": "…"
+              }
+            },
+            "upload_limits": {
+              "accepted_types": [
+                "image/jpeg",
+                "image/png",
+                "image/webp"
+              ],
+              "max_burst_pixels": 125000000,
+              "max_frames": 15,
+              "max_image_bytes": 12000000,
+              "max_pixels": 24000000,
+              "max_request_bytes": 60000000
+            },
+            "user_adjustable_points": {
+              "frontal": [
+                "trichion"
+              ],
+              "profile": [
+                "…"
+              ]
+            },
+            "versions": {
+              "api": "0.1.0",
+              "core": "0.1.0",
+              "schema": "2.0"
+            }
+          }
+        ]
+      },
+      "FrontalAnalyzeMeta": {
+        "additionalProperties": false,
+        "examples": [
+          {
+            "camera": {
+              "focal_px": 2890.0,
+              "source": "device"
+            },
+            "locale": "th",
+            "overlay": {
+              "layers": [
+                "landmarks",
+                "thirds",
+                "fifths"
+              ]
+            },
+            "subject": {
+              "age": 28,
+              "sex": "female"
+            }
+          }
+        ],
+        "properties": {
+          "subject": {
+            "$ref": "#/components/schemas/SubjectIn"
+          },
+          "camera": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CameraIn"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "locale": {
+            "default": "th",
+            "enum": [
+              "th",
+              "en"
+            ],
+            "title": "Locale",
+            "type": "string"
+          },
+          "overlay": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OverlayRequest"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          }
+        },
+        "required": [
+          "subject"
+        ],
+        "title": "FrontalAnalyzeMeta",
+        "type": "object"
+      },
+      "OverlayMeta": {
+        "additionalProperties": false,
+        "examples": [
+          {
+            "layers": [
+              "landmarks",
+              "thirds",
+              "fifths"
+            ],
+            "locale": "th",
+            "result_token": "eJy…"
+          }
+        ],
+        "properties": {
+          "result_token": {
+            "maxLength": 524288,
+            "minLength": 1,
+            "title": "Result Token",
+            "type": "string"
+          },
+          "layers": {
+            "items": {
+              "maxLength": 32,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 16,
+            "minItems": 1,
+            "title": "Layers",
+            "type": "array"
+          },
+          "locale": {
+            "default": "th",
+            "enum": [
+              "th",
+              "en"
+            ],
+            "title": "Locale",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result_token",
+          "layers"
+        ],
+        "title": "OverlayMeta",
+        "type": "object"
+      },
+      "OverlayRequest": {
+        "additionalProperties": false,
+        "description": "The overlay to render with the result, with these layers.",
+        "properties": {
+          "layers": {
+            "items": {
+              "maxLength": 32,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 16,
+            "minItems": 1,
+            "title": "Layers",
+            "type": "array"
+          }
+        },
+        "required": [
+          "layers"
+        ],
+        "title": "OverlayRequest",
+        "type": "object"
+      },
+      "PointIn": {
+        "additionalProperties": false,
+        "properties": {
+          "x": {
+            "title": "X",
+            "type": "number"
+          },
+          "y": {
+            "title": "Y",
+            "type": "number"
+          }
+        },
+        "required": [
+          "x",
+          "y"
+        ],
+        "title": "PointIn",
+        "type": "object"
+      },
+      "Problem": {
+        "description": "RFC 9457 problem details with a stable ``code``.",
+        "examples": [
+          {
+            "code": "invalid_meta",
+            "detail": "invalid fields: subject.age: less_than_equal",
+            "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3",
+            "status": 422,
+            "title": "Unprocessable Content",
+            "type": "about:blank"
+          }
+        ],
+        "properties": {
+          "type": {
+            "default": "about:blank",
+            "title": "Type",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "integer"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Request Id"
+          }
+        },
+        "required": [
+          "title",
+          "status",
+          "detail",
+          "code"
+        ],
+        "title": "Problem",
+        "type": "object"
+      },
+      "ProfileAnalyzeMeta": {
+        "additionalProperties": false,
+        "description": "With ``frontal_token`` the subject and session come from it (a different ``subject`` → 400\n``subject_mismatch``); without one ``subject`` is required and mm values are unavailable.",
+        "examples": [
+          {
+            "camera": {
+              "focal_px": 2890.0,
+              "source": "device"
+            },
+            "facing": "left",
+            "frontal_token": "eJy…",
+            "locale": "th",
+            "overlay": {
+              "layers": [
+                "landmarks",
+                "profile_lines"
+              ]
+            }
+          }
+        ],
+        "properties": {
+          "facing": {
+            "enum": [
+              "left",
+              "right"
+            ],
+            "title": "Facing",
+            "type": "string"
+          },
+          "camera": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CameraIn"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "locale": {
+            "default": "th",
+            "enum": [
+              "th",
+              "en"
+            ],
+            "title": "Locale",
+            "type": "string"
+          },
+          "overlay": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OverlayRequest"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "frontal_token": {
+            "anyOf": [
+              {
+                "maxLength": 524288,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Frontal Token"
+          },
+          "subject": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SubjectIn"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          }
+        },
+        "required": [
+          "facing"
+        ],
+        "title": "ProfileAnalyzeMeta",
+        "type": "object"
+      },
+      "ReadyResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "ready",
+            "title": "Status"
+          },
+          "workers": {
+            "type": "integer",
+            "title": "Workers"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "workers"
+        ],
+        "title": "ReadyResponse",
+        "examples": [
+          {
+            "status": "ready",
+            "workers": 4
+          }
+        ]
+      },
+      "ReportRequest": {
+        "additionalProperties": false,
+        "description": "Both tokens must share a ``session_id``; the profile is optional.",
+        "examples": [
+          {
+            "frontal_token": "eJy…",
+            "locale": "th",
+            "profile_token": "eJy…"
+          }
+        ],
+        "properties": {
+          "frontal_token": {
+            "maxLength": 524288,
+            "minLength": 1,
+            "title": "Frontal Token",
+            "type": "string"
+          },
+          "profile_token": {
+            "anyOf": [
+              {
+                "maxLength": 524288,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Profile Token"
+          },
+          "locale": {
+            "default": "th",
+            "enum": [
+              "th",
+              "en"
+            ],
+            "title": "Locale",
+            "type": "string"
+          }
+        },
+        "required": [
+          "frontal_token"
+        ],
+        "title": "ReportRequest",
+        "type": "object"
+      },
+      "ReportResponse": {
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "no_face",
+              "multiple_faces",
+              "quality_failed",
+              "contour_failed"
+            ],
+            "title": "Status"
+          },
+          "report": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Report",
+            "description": "The core's user_view(report)."
+          },
+          "versions": {
+            "$ref": "#/components/schemas/Versions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "request_id",
+          "status",
+          "report",
+          "versions"
+        ],
+        "title": "ReportResponse",
+        "description": "The report's user view. No token is returned.",
+        "examples": [
+          {
+            "report": {
+              "consideration_intro": "Features you may want to discuss with a licensed plastic surgeon",
+              "considerations": [
+                {
+                  "area": "nose",
+                  "area_text": "Nose",
+                  "considerations": [
+                    "…"
+                  ],
+                  "consult": "Please consult a licensed plastic surgeon in person before making any decision.",
+                  "finding": "…",
+                  "measurements": [
+                    {
+                      "id": "P2_nasolabial_angle",
+                      "name": "…",
+                      "reference": {
+                        "basis": "canon",
+                        "max": 105.0,
+                        "min": 95.0,
+                        "text": "95.0° – 105.0°"
+                      },
+                      "status": "below",
+                      "status_text": "…",
+                      "value_text": "84.2°"
+                    }
+                  ],
+                  "rule_id": "EXAMPLE-01",
+                  "severity": "info",
+                  "severity_text": "…"
+                }
+              ],
+              "disclaimer": "…",
+              "frontal": {
+                "view": "frontal",
+                "…": "…"
+              },
+              "locale": "en",
+              "profile": {
+                "view": "profile",
+                "…": "…"
+              },
+              "rules_version": "EXAMPLE",
+              "status": "ok"
+            },
+            "request_id": "req_0192f3a4b5c6d7e8f9a0b1c2d3",
+            "status": "ok",
+            "versions": {
+              "api": "0.1.0",
+              "core": "0.1.0",
+              "schema": "2.0"
+            }
+          }
+        ]
+      },
+      "SubjectIn": {
+        "additionalProperties": false,
+        "description": "Self-reported; ``norms_profile`` is set by server config, never by the client.",
+        "properties": {
+          "sex": {
+            "enum": [
+              "female",
+              "male",
+              "unspecified"
+            ],
+            "title": "Sex",
+            "type": "string"
+          },
+          "age": {
+            "maximum": 120,
+            "minimum": 1,
+            "title": "Age",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "sex",
+          "age"
+        ],
+        "title": "SubjectIn",
+        "type": "object"
+      },
+      "UploadLimits": {
+        "properties": {
+          "max_image_bytes": {
+            "type": "integer",
+            "title": "Max Image Bytes"
+          },
+          "max_request_bytes": {
+            "type": "integer",
+            "title": "Max Request Bytes"
+          },
+          "max_frames": {
+            "type": "integer",
+            "title": "Max Frames"
+          },
+          "max_pixels": {
+            "type": "integer",
+            "title": "Max Pixels"
+          },
+          "max_burst_pixels": {
+            "type": "integer",
+            "title": "Max Burst Pixels"
+          },
+          "accepted_types": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Accepted Types"
+          }
+        },
+        "type": "object",
+        "required": [
+          "max_image_bytes",
+          "max_request_bytes",
+          "max_frames",
+          "max_pixels",
+          "max_burst_pixels",
+          "accepted_types"
+        ],
+        "title": "UploadLimits"
+      },
+      "Versions": {
+        "properties": {
+          "api": {
+            "type": "string",
+            "title": "Api"
+          },
+          "core": {
+            "type": "string",
+            "title": "Core"
+          },
+          "schema": {
+            "type": "string",
+            "title": "Schema"
+          }
+        },
+        "type": "object",
+        "required": [
+          "api",
+          "core",
+          "schema"
+        ],
+        "title": "Versions"
+      }
+    }
+  }
+}
